@@ -17,11 +17,10 @@
         font-family: sans-serif;
         margin:2% 10%;
         display: flex;
-        justify-items: center;
+        flex-direction: column;
     }
 
     #shuify-name {
-        justify-content: space-evenly;
         font-weight: 200;
         width: 21%;
         z-index: 1;
@@ -35,6 +34,7 @@
 
     .top-bar {
         width: 100%;
+        height: 10%;
     }
 
     .right-of-top-bar {
@@ -44,16 +44,39 @@
     
 
     #descriptive-header {
-        font-weight: 545;
-        font-size: 400%;
-        width: 21%;
-        z-index: 1;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        width: auto;
+        margin-bottom: 20px;
+        text-align: left;
     }
 
     #fp-castle {
-        width: 25%;
-        z-index: 0;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        margin: 0;
     }
+
+    .fp-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        max-width: 500px;
+    }
+
+    #fp-castle {
+        width: 100%;
+        height: auto;
+        max-width: 500px; /* Optional: limit width */
+    }
+
+    
 
 </style>
 </head>
@@ -71,9 +94,9 @@
         </div>
     </div>
 
-    <div class="fp-container" style="position:relative;">
-        <h1 id="descriptive-header" style="position:absolute; top:0; left:0;">Make Flow in Spaces</h1>
-        <img id="fp-castle" src="castle-2-bg.png" alt="castle" style="position:absolute; top: 20px; left:50px;">
+    <div class="fp-container">
+        <h1 id="descriptive-header">Make Flow in Spaces</h1>
+        <img id="fp-castle" src="castle-2-bg.png" alt="castle">
     </div>
 
 </body>
