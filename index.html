@@ -31,6 +31,7 @@
         display: flex;
         justify-content: space-between;
         z-index: 1;
+        align-items: center;
     }
 
     .top-bar {
@@ -77,6 +78,11 @@
         max-width: 500px; /* Optional: limit width */
     }
 
+    .hyperlink {
+        text-decoration: none;
+        color: black;
+    }
+
     
 
 </style>
@@ -86,16 +92,15 @@
     <div class="top-bar">
         <h1 id="shuify-name">Shuify</h1>
         <div class="right-of-top-bar">
-            <a href="my-rooms.html">My Rooms</a>
-            <button>Presets</button>
-            <button>Items</button>
-            <button>Sign In</button>
-            
+            <a href="my-rooms.html" class="hyperlink">My Rooms</a>
+            <a href="presets.html" class="hyperlink">Presets</a>
+            <a href="items.html" class="hyperlink">Items</a>
+            <a href="sign-in.html" class="hyperlink">Sign In</a>
         </div>
     </div>
 
     <div class="fp-container">
-        <h1 id="descriptive-header">Make Flow in Spaces</h1>
+        <!-- <h1 id="descriptive-header">Make Flow in Spaces</h1> -->
         <img id="fp-castle" src="castle-2-bg.png" alt="castle">
     </div>
 
