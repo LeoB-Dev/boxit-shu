@@ -18,7 +18,12 @@
         margin:2% 10%;
         display: flex;
         flex-direction: column;
-        
+    }
+
+    .main-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     #shuify-name {
@@ -51,7 +56,7 @@
         top: auto !important;
         width: auto;
         margin-bottom: 20px;
-        text-align: left;
+        text-align: center;
     }
 
     #fp-castle {
@@ -64,8 +69,7 @@
     .fp-container {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
+        /* justify-content: center; */
         left: 0;
         top: 0;
         height: 100vh;
@@ -88,21 +92,26 @@
 </style>
 </head>
 <body>
-
-    <div class="top-bar">
-        <h1 id="shuify-name">Shuify</h1>
-        <div class="right-of-top-bar">
-            <a href="my-rooms.html" class="hyperlink">My Rooms</a>
-            <a href="presets.html" class="hyperlink">Presets</a>
-            <a href="items.html" class="hyperlink">Items</a>
-            <a href="sign-in.html" class="hyperlink">Sign In</a>
+    <div class="main-section">
+        <div class="top-bar">
+            <h1 id="shuify-name">Shuify</h1>
+            <div class="right-of-top-bar">
+                <a href="my-rooms.html" class="hyperlink">My Rooms</a>
+                <a href="presets.html" class="hyperlink">Presets</a>
+                <a href="items.html" class="hyperlink">Items</a>
+                <a href="sign-in.html" class="hyperlink">Sign In</a>
+            </div>
+        </div>
+    
+        <div class="fp-container">
+            <h1 id="descriptive-header">Add Feng Shui to Your Spaces</h1>
+            <!-- <img id="fp-castle" src="castle-2-bg.png" alt="castle"> -->
         </div>
     </div>
+        
 
-    <div class="fp-container">
-        <!-- <h1 id="descriptive-header">Make Flow in Spaces</h1> -->
-        <!-- <img id="fp-castle" src="castle-2-bg.png" alt="castle"> -->
-    </div>
+
+    
 
 </body>
 </html>
