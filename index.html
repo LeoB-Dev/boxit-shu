@@ -8,38 +8,33 @@
     }
     
     body {
-        background-color:#D2B48C; /* prevents flash by replacing background with the same colour */ 
-        background-image: url("background.png");
-        background-size: 100% auto;  /* Full width, height adjusts automatically */
-        /* background-position: top center; remove this? */
-        background-attachment: scroll;  /* This makes it scroll with content */
-        min-height: 265vh;  /* Ensures the page is at least full height */
-        font-family: sans-serif;
-        margin:2% 10%;
         display: flex;
         flex-direction: column;
+        margin:2% 10%;
+        background-color:#D2B48C;
+        background-image: url("background.png");
+        background-size: 100% auto;  
+        background-attachment: scroll;  
+        min-height: 265vh;
+        font-family: sans-serif;
     }
 
     .main-section {
         display: flex;
         flex-direction: column;
         align-items: center;
+        flex: 1; /* Take up remaining space. */
     }
 
     #shuify-name {
         font-weight: 200;
         width: 21%;
-        /* z-index: 1; remove this? */
     }
 
-    .top-bar, .right-of-top-bar {
+    .top-bar, .right-of-top-bar, .bottom-bar {
         display: flex;
         justify-content: space-between;
-        /* z-index: 1; remove this? */
         align-items: center;
-    }
-
-    .top-bar {
         width: 100%;
         height: 10%;
     }
@@ -48,11 +43,21 @@
         width: 50%;
         font-size: smaller;
     }
-    
+
+    .bottom-bar {
+        clear: both;
+        position: relative;
+        z-index: 10;
+        height: 3em;
+        margin-top: -3em;
+    }
+
+    #descriptive-header, #lower-header {
+        text-align: center;
+    }
 
     #descriptive-header {
         margin-top: 8.5%;
-        text-align: center;
         font-size: 3vw;
         width: 90%;
         /* min-width: 200px; text does not wrap */
@@ -60,9 +65,12 @@
 
     #lower-header {
         margin-top: 1.5%;
-        text-align: center;
         font-size: 1.5vw;
         width: 55%;
+    }
+
+    #middle-button {
+        margin-top: 3.5%;
     }
 
     #fp-castle {
@@ -97,8 +105,7 @@
 </style>
 </head>
 <body>
-    <div class="main-section">
-        <div class="top-bar">
+    <div class="top-bar">
             <h1 id="shuify-name">Shuify</h1>
             <div class="right-of-top-bar">
                 <a href="my-rooms.html" class="hyperlink">My Rooms</a>
@@ -106,13 +113,24 @@
                 <a href="items.html" class="hyperlink">Items</a>
                 <a href="sign-in.html" class="hyperlink">Sign In</a>
             </div>
-        </div>
+    </div>
 
+    <div class="main-section">
         <h1 id="descriptive-header">Add Feng Shui to Your Spaces. Clear your mind and open your soul.</h1>
         <h1 id="lower-header">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h1>
+        <button id="middle-button">View More Details</button>
     
         <!-- <img id="fp-castle" src="castle-2-bg.png" alt="castle"> -->
+    </div>
 
+    <div class="bottom-bar">
+            <h1 id="shuify-name">Shuify</h1>
+            <div class="right-of-top-bar">
+                <a href="my-rooms.html" class="hyperlink">My Rooms</a>
+                <a href="presets.html" class="hyperlink">Presets</a>
+                <a href="items.html" class="hyperlink">Items</a>
+                <a href="sign-in.html" class="hyperlink">Sign In</a>
+            </div>
     </div>
 </body>
 </html>
