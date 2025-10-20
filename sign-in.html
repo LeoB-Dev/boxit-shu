@@ -30,13 +30,27 @@
     /* Content area takes up remaining 2/3 */
     .content {
         margin-left: 33.33vw;
-        padding: 120px 5%;
+        padding: 120px 25% 120px 3%;
         display: flex;
         flex-direction: column;
     }
 
     .main-form {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: antiquewhite;
+    }
+
+    .box {
+        display: flex;
+        flex-direction: column;
+        font-size: small;
+    }
+
+    #account {
+        display: flex;
+        align-items: center;
     }
 </style>
 <body>
@@ -44,32 +58,44 @@
     <div class="content">
         <h3 id="top-text-header">This is not a real online service! You know you need something like this in yourn life ton help you realise your deepest dreams. Sign up now to get started.</h3>
         <h3 id="2nd-header">You know you want to</h3>
-        <h3 id="3rd-header">Let's do this!<h3>
         <form class="main-form">
+            <h3 id="3rd-header">Let's do this!<h3></h3>
             <div class="left-form">
-                <label for="fname">First Name</label>
-                <input type="text" id="fname" name="fname"><br><br>
-                <label for="lname">Last Name: </label>
-                <input type="text" id="lname" name="lname"><br><br>
+                <div class="box">
+                    <label for="fname">First Name</label>
+                    <input type="text" id="fname" name="fname"><br><br>
+                </div>
+                <div class="box">
+                    <label for="lname">Last Name: </label>
+                    <input type="text" id="lname" name="lname"><br><br>
+                </div>
+                <div class="box">
+                    <label for="email">Email: </label>
+                    <input type="text" id="email" name="email"><br><br>
+                </div>
             </div>
-
-            <div class="middle-form">
-                <label for="email">Email: </label>
-                <input type="text" id="email" name="email"><br><br>
-                <label for="phone">Phone Number </label>
-                <input type="text" id="phone" name="phone"><br><br>
-            </div>
-
             <div class="right-form">
-                <label for="passwd">Password: </label>
-                <input type="text" id="passwd" name="passwd"><br><br>
-                <label for="cnfm-passwd">Confirm Password: </label>
-                <input type="text" id="cnfm-passwd" name="cnfm-passwd"><br><br>
+                <div class="box">
+                    <label for="phone">Phone Number </label>
+                    <input type="text" id="phone" name="phone"><br><br>
+                </div>
+                <div class="box">
+                    <label for="passwd">Password: </label>
+                    <input type="text" id="passwd" name="passwd"><br><br>
+                </div>
+                <div class="box">
+                    <label for="cnfm-passwd">Confirm Password: </label>
+                    <input type="text" id="cnfm-passwd" name="cnfm-passwd"><br><br>
+                </div>
+                
+                
             </div>
         </form>
         <button>Create Account</button>
-        <p>Already have an account?</p>
-        <a href="my-rooms.html" class="hyperlink">Login</a>
+        <div id="account">
+            <p>Already have an account?</p>
+            <a href="my-rooms.html" class="hyperlink"> Login</a>
+        </div>
     </div>
 </body>
 </body>

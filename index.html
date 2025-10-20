@@ -14,20 +14,21 @@
         min-height: 265vh;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        /* justify-content: space-between; */
     }
     
-    .section-1 {
+    /* .section-1 {
         display: flex;
         flex-direction: column;
         margin:2% 10%;
-    }
+    } */
 
     .middle-section {
         display: flex;
         flex-direction: column;
         align-items: center;
         /* flex: 1; Take up remaining space. */
+        flex-grow: 1;
     }
 
     #shuify-name {
@@ -44,25 +45,30 @@
         height: 10%;
     }
 
+    /* .bottom-bar {
+        position: fixed;
+        bottom: 0;
+    } */
+
     .right-of-top-bar {
         width: 50%;
         font-size: smaller;
     }
 
-    #descriptive-header, #lower-header {
+    #main-header-1, #lower-header-1 {
         text-align: center;
     }
 
-    #descriptive-header {
-        margin-top: 8.5%;
-        font-size: 3vw;
+    #main-header-1 {
+        margin-top: 100px;
+        font-size: 300%;
         width: 90%;
         /* min-width: 200px; text does not wrap */
     }
 
-    #lower-header {
-        margin-top: 1.5%;
-        font-size: 1.5vw;
+    #lower-header-1 {
+        margin-top: 0;
+        font-size: 2vw;
         width: 55%;
     }
 
@@ -80,6 +86,7 @@
     #isometric-city {
         width: 100%;
         height: auto;
+        margin-top: 15px;
     }
 
     .hyperlink {
@@ -90,26 +97,23 @@
 </style>
 </head>
 <body>
-    <div class="section-1">
-        <div class="top-bar">
-            <h1 id="shuify-name">Shuify</h1>
-            <div class="right-of-top-bar">
-                <a href="my-rooms.html" class="hyperlink">My Rooms</a>
-                <a href="presets.html" class="hyperlink">Presets</a>
-                <a href="items.html" class="hyperlink">Items</a>
-                <a href="sign-in.html" class="hyperlink">Sign In</a>
-            </div>
-        </div>
-
-        <div class="middle-section">
-            <h1 id="descriptive-header">Add Feng Shui to Your Spaces. Clear your mind and open your soul.</h1>
-            <h1 id="lower-header">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h1>
-            <button id="middle-button">View More Details</button>
+    <div class="top-bar">
+        <h1 id="shuify-name">Shuify</h1>
+        <div class="right-of-top-bar">
+            <a href="my-rooms.html" class="hyperlink">My Rooms</a>
+            <a href="presets.html" class="hyperlink">Presets</a>
+            <a href="items.html" class="hyperlink">Items</a>
+            <a href="sign-in.html" class="hyperlink">Sign In</a>
         </div>
     </div>
-    
 
-    <img id="isometric-city" src="isometric-city.jpg" alt="iso city">
+    <div class="middle-section">
+        <h1 id="main-header-1">Add Feng Shui to Your Spaces. Clear your mind and open your soul.</h1>
+        <h1 id="lower-header-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</h1>
+        <button id="middle-button">View More Details</button>
+        <img id="isometric-city" src="isometric-city.jpg" alt="iso city">
+        <h2 id="descriptive-header-2"></h2>
+    </div>
 
     <div class="bottom-bar">
             <h1 id="shuify-name">Shuify</h1>
