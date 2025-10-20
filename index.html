@@ -9,8 +9,12 @@
         background-image: url("background.png");
         background-size: 100% auto;  
         background-attachment: scroll;
+        /* background: no-repeat; */
         font-family: sans-serif;
         min-height: 265vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     
     .section-1 {
@@ -32,7 +36,8 @@
     }
 
     .top-bar, .right-of-top-bar, .bottom-bar {
-        display: flex;
+        background-color: white; /* temp */ 
+        display: flex; 
         justify-content: space-between;
         align-items: center;
         width: 100%;
@@ -75,7 +80,6 @@
     #isometric-city {
         width: 100%;
         height: auto;
-        flex: 1;
     }
 
     .hyperlink {

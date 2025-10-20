@@ -5,6 +5,10 @@ Homepage
 https://stackoverflow.com/questions/15649244/responsive-font-size-in-css
 - https://css-tricks.com/viewport-sized-typography/ 
 
+- Add responsive NavBar
+https://www.youtube.com/watch?v=U8smiWQ8Seg
+ This is also a good looking website 
+
 - Footer is disappearing when I make the page narrower
 
 - Needs to add another container for all the content apart from the image and the footer, remove css from body and add to this new container

@@ -7,24 +7,70 @@
 </head>
 <style>
     body {
-        background-color:#D2B48C; /* prevents flash by replacing background with the same colour */ 
+        background-color:#D2B48C;
         background-image: url("background.png");
         background-size: 100% auto;  
         background-position: top center;
         font-family: sans-serif;
-        margin:2% 10%;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
+
+    #side-coins {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 33.33vw; /* Takes up 1/3 of viewport width */
+        object-fit: cover; /* Maintains aspect ratio while filling the space */
+        object-position: left center; /* Keeps the image aligned to the left */
+    }
+    
+    /* Content area takes up remaining 2/3 */
+    .content {
+        margin-left: 33.33vw;
+        padding: 120px 5%;
         display: flex;
         flex-direction: column;
     }
 
-    #side-coins {
-        height: 100vh;
-        /* width: 100%; */
-        aspect-ratio: 516/1031;
+    .main-form {
+        display: flex;
     }
-
 </style>
 <body>
     <img id="side-coins" src="side-coins.png" alt="coins">
+    <div class="content">
+        <h3 id="top-text-header">This is not a real online service! You know you need something like this in yourn life ton help you realise your deepest dreams. Sign up now to get started.</h3>
+        <h3 id="2nd-header">You know you want to</h3>
+        <h3 id="3rd-header">Let's do this!<h3>
+        <form class="main-form">
+            <div class="left-form">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname">Last Name: </label>
+                <input type="text" id="lname" name="lname"><br><br>
+            </div>
+
+            <div class="middle-form">
+                <label for="email">Email: </label>
+                <input type="text" id="email" name="email"><br><br>
+                <label for="phone">Phone Number </label>
+                <input type="text" id="phone" name="phone"><br><br>
+            </div>
+
+            <div class="right-form">
+                <label for="passwd">Password: </label>
+                <input type="text" id="passwd" name="passwd"><br><br>
+                <label for="cnfm-passwd">Confirm Password: </label>
+                <input type="text" id="cnfm-passwd" name="cnfm-passwd"><br><br>
+            </div>
+        </form>
+        <button>Create Account</button>
+        <p>Already have an account?</p>
+        <a href="my-rooms.html" class="hyperlink">Login</a>
+    </div>
+</body>
 </body>
 </html>
