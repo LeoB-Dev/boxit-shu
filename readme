@@ -23,7 +23,7 @@ Items
 
 
 Sign In
-- For the sign in page have the same background (there may be a way to do this in backend)
+- form is now not submitting, doesn't submit in original code snippet either 
 
 - Create page button may need to be included in the form container
 
