@@ -25,6 +25,12 @@ Items
 Sign In
 - For the sign in page have the same background (there may be a way to do this in backend)
 
+- Create page button may need to be included in the form container
+
+Form Validation:
+- /* The action attribute defines the location (URL) where the form's collected data should be sent when it is submitted.
+
+The method attribute defines which HTTP method to send the data with (usually get or post). */
 
 
 
