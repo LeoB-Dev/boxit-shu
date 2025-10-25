@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="index.js" defer></script>
 <style>
     body {
         margin: 0;
         padding: 0;
-        background-color:#D2B48C;
-        background-image: url("background.png");
+        background-color: #f2f2f2;
         background-size: 100% auto;  
         background-attachment: scroll;
         /* background: no-repeat; */
-        font-family: sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 265vh;
         display: flex;
         flex-direction: column;
         /* justify-content: space-between; */
     }
     
-    /* .section-1 {
-        display: flex;
-        flex-direction: column;
-        margin:2% 10%;
-    } */
-
-    .middle-section {
+    .main-section {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -31,36 +28,41 @@
         flex-grow: 1;
     }
 
-    #shuify-name {
+    #shuify-name, .nav-bar, #description-1, #description-2, #main-header-1, #main-header-2 {
         font-weight: 200;
-        width: 21%;
     }
 
-    .top-bar, .right-of-top-bar, .bottom-bar {
-        background-color: white; /* temp */ 
+    .nav-bar, .bottom-bar {
+        padding-right: 22px;
+        padding-left: 22px;
+    }
+
+    .nav-bar, .right-of-nav-bar, .bottom-bar {
+        background-color: #f2f2f2; /* temp */ 
         display: flex; 
         justify-content: space-between;
         align-items: center;
-        width: 100%;
         height: 10%;
     }
 
-    /* .bottom-bar {
-        position: fixed;
-        bottom: 0;
-    } */
-
-    .right-of-top-bar {
+    .right-of-nav-bar {
         width: 50%;
         font-size: smaller;
     }
 
-    #main-header-1, #description-1 {
+    #sign-in {
+        color: #f2f2f2;
+        background-color: #219EBC;
+        padding: 4px;
+        border-radius: 4px;
+    }
+
+    #main-header-1, #description-1, #description-2 {
         text-align: center;
     }
 
     #main-header-1 {
-        margin-top: 100px;
+        margin-top: 80px;
         font-size: 300%;
         width: 90%;
         /* min-width: 200px; text does not wrap */
@@ -74,13 +76,18 @@
 
     #middle-button {
         margin-top: 3.5%;
+        padding: 5px;
+        width: 150px;
+        background-color: #8ECAE6;
+        border: none;
+        border-radius: 4px;
+        color: black;
+        cursor: pointer;
+        text-align: center;
     }
 
-    #fp-castle {
-        position: static !important;
-        left: auto !important;
-        top: auto !important;
-        margin: 0;
+    #middle-button:hover {
+    box-shadow: 0px 0px 12px 4px rgba(255, 255, 255, 0.74);
     }
 
     #isometric-city {
@@ -94,32 +101,83 @@
         color: black;
     }
 
+    .word-box, #isometric-room {
+        width: 376px;
+    }
+
+    #isometric-room {
+        height: auto;
+        /* margin-top: 60px; */
+        position: sticky;
+        right: 70px;  /* Distance from right edge */
+        top: 250px;    /* Distance from top edge */
+    }
+
+    .middle-scrollable-section {
+        margin-top: 70px;
+        width: 90%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .left-non-sticky {
+        display: flex;
+        flex-direction: column;
+        height: 1400px;
+        justify-content: space-between;
+    }
+
+    .word-box {
+        text-align: center;
+        font-size: x-large;
+    }
+
+    #empty-div {
+        height: 500px;
+    }
+
 </style>
 </head>
 <body>
-    <div class="top-bar">
+    <div class="nav-bar">
         <h1 id="shuify-name">Shuify</h1>
-        <div class="right-of-top-bar">
+        <div class="right-of-nav-bar">
             <a href="my-rooms.html" class="hyperlink">My Rooms</a>
             <a href="presets.html" class="hyperlink">Presets</a>
             <a href="items.html" class="hyperlink">Items</a>
-            <a href="sign-in.html" class="hyperlink">Sign In</a>
+            <a id="sign-in" href="sign-in.html" class="hyperlink">Sign In</a>
         </div>
     </div>
 
-    <div class="middle-section">
+    <div class="main-section">
         <h1 id="main-header-1">Add Feng Shui to Your Spaces. Clear your mind and open your soul.</h1>
         <h1 id="description-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</h1>
-        <button id="middle-button">View More Details</button>
+        <button id="middle-button">Get started for free</button>
         <img id="isometric-city" src="isometric-city.jpg" alt="iso city">
         <h2 id="main-header-2">How it works</h2>
-        <p id="description-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit veniam nam neque voluptatibus dolores voluptas deleniti? Ipsum corporis illum ullam minima, aut necessitatibus repellendus numquam ab enim sequi, amet delectus nulla aliquid quam nihil architecto tempore?
+        <p id="description-2">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga dolorem delectus, esse doloribus eveniet omnis veritatis. Excepturi commodi mollitia expedita officia, deserunt accusantium eveniet quisquam. Sint, iste optio quis assumenda reprehenderit sed expedita corporis unde illo autem nisi voluptatum maiores, eum sapiente quod. Accusamus sed, fugit dolore nesciunt ad sint.
         </p>
+
+        <div class="middle-scrollable-section">
+            <div class="left-non-sticky">
+                <p class="word-box" id="word-box-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus nesciunt nemo hic? Quas maxime quisquam dolorem laboriosam cum, ad ipsa, ratione illum mollitia labore autem ut minima, repudiandae explicabo nisi earum fuga deleniti!</p>
+                <p class="word-box" id="word-box-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus nesciunt nemo hic? Quas maxime quisquam dolorem laboriosam cum, ad ipsa, ratione illum mollitia labore autem ut minima, repudiandae explicabo nisi earum fuga deleniti!.</p>
+                <p class="word-box" id="word-box-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus nesciunt nemo hic? Quas maxime quisquam dolorem laboriosam cum, ad ipsa, ratione illum mollitia labore autem ut minima, repudiandae explicabo nisi earum fuga deleniti!.</p>
+            </div>
+            <div class="right-sticky">
+                <img id="isometric-room" src="isoplaceholder-2.jpg" alt="iso city">
+            </div>
+        </div>
+        
+        
     </div>
+
+    <div id="empty-div"></div>
 
     <div class="bottom-bar">
             <h1 id="shuify-name">Shuify</h1>
-            <div class="right-of-top-bar">
+            <div class="right-of-nav-bar">
                 <a href="my-rooms.html" class="hyperlink">My Rooms</a>
                 <a href="presets.html" class="hyperlink">Presets</a>
                 <a href="items.html" class="hyperlink">Items</a>
