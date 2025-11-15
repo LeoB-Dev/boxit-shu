@@ -104,23 +104,4 @@ function hideSidebar(){
 }
 
 
-// https://www.w3schools.com/howto/howto_js_media_queries.asp
-
-// function myFunction(x) {
-//     if(x.matches) {
-//         document.player-sidebar.style.backgroundColor = "yellow";
-//     } else {
-//         document.player-sidebar.style.backgroundColor = "pink";
-//     }
-// }
-
-// // create a MediaQueryList object
-// var y = window.matchMedia("(max-width: 750px)")
-
-// myFunction(x);
-
-// x.addEventListener("change", function() {
-//     myFunction(x);
-// })
-
 
