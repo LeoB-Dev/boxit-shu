@@ -49,8 +49,10 @@
         }
 
         #iso-bed {
-            width: 60%;
+            width: 200px;
             height: auto;
+            cursor: pointer;
+            position: fixed;
         }
 
         #central-content {
@@ -80,7 +82,7 @@
             }
 
             #iso-bed {
-                height: 60%;
+                height: 100px;
                 width: auto;
             }
 
@@ -98,7 +100,7 @@
         <div id="main-content">
             <div id="player-sidebar">
                 <input type="text" id="search-bar" name="search-bar" minlength="1" maxlength="50" autocomplete="given-name"><br><br>
-                <img id="iso-bed" src="iso-bed-nobg.png" alt="bed">
+                <img class="furniture" id="iso-bed" draggable="true" src="iso-bed-nobg.png" alt="bed">
             </div>
             <div id="central-content">
                 <img id="iso-room" src="c-t-iso-room.png" alt="main-room">
