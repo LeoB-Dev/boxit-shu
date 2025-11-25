@@ -109,3 +109,9 @@ form {
 #question-1 {
     margin-right: 3px;
 }
+
+@media(max-width:630px){
+    .content {
+        flex-direction: column-reverse;
+    }
+}
