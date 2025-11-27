@@ -42,8 +42,25 @@
             min-width: 166px;
         }
 
+        #search-bar {
+            border-radius: 5px;
+            margin-top: 5%;
+            width: 85%;
+            height: 3%;
+            border: 1px solid white;
+        }
+
+        .furn-container {
+            background-color: white;
+            width: 85%;
+            height: 19%;
+            border-radius: 6px;
+            position: relative;
+            margin-top: 10px;
+        }
+
         #iso-bed {
-            width: 40%;
+            width: 100%;
             height: auto;
             cursor: pointer;
             position: relative;
@@ -51,11 +68,12 @@
         }
 
         .category-button {
-            width: 80%;
+            width: 85%;
             height: 15%;
             background-color: white;
             border: none;
             border-radius: 5px;
+            margin-top: 10px;
         }
 
         #central-content {
@@ -104,45 +122,29 @@
             transform-origin: bottom right;
         }
 
-        #search-bar {
-            border-radius: 5px;
-            margin-top: 5%;
-            width: 90%;
-            height: 3%;
-            border: 1px solid white;
-        }
-
-        .furn-container {
-            background-color: white;
-            width: 90%;
-            height: 19%;
-            border-radius: 6px;
-            position: relative;
-        }
-
         @media(max-width: 800px){
             #main-content {
                 flex-direction: column-reverse;
             }
+
             #player-sidebar {
                 flex-direction: row;
-                height: 180px;
+                height: 20%;
                 width: 100%;
-                justify-content: space-evenly;
-            }
-
-            #iso-bed {
-                height: 100px;
-                width: auto;
+                justify-content: flex-start;
             }
 
             #search-bar {
                 width: 120px;
+                height: 9%;
+                align-self: flex-start;
+                margin-left: 1.5%;
             }
 
-            .category-button {
-                width: 120px;
+            .category-button, .furn-container {
+                width: 25%;
                 height: 80%;
+                margin-left: 1.5%;
             }
         } 
         
