@@ -1,4 +1,4 @@
-$.get("index.html", function(data){
+$.get("../navbar.html", function(data){
     $("#nav").replaceWith(data);
 });
 
