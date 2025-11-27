@@ -42,6 +42,10 @@
             min-width: 166px;
         }
 
+        /* #input-container {
+            display: none;
+        } */
+
         #search-bar {
             border-radius: 5px;
             margin-top: 5%;
@@ -64,7 +68,7 @@
             height: auto;
             cursor: pointer;
             position: relative;
-            z-index: 999;
+            z-index: 2;
         }
 
         .category-button {
@@ -138,13 +142,13 @@
                 width: 120px;
                 height: 9%;
                 align-self: flex-start;
-                margin-left: 1.5%;
+                margin-left: 1%;
             }
 
             .category-button, .furn-container {
                 width: 25%;
                 height: 80%;
-                margin-left: 1.5%;
+                margin-left: 1%;
             }
         } 
         
@@ -156,7 +160,9 @@
         <div id="nav"></div>
         <div id="main-content">
             <div id="player-sidebar">
-                <input type="text" id="search-bar" name="search-bar" minlength="1" maxlength="50" autocomplete="given-name"><br><br>
+                <div id="input-container">
+                    <input id="search-bar" name="search-bar" type="text" minlength="1" maxlength="50" autocomplete="given-name"><br><br>
+                </div>
                 <button class="category-button" id="beds">Beds</button>
                 <div class="furn-container">
                     <img class="furniture" id="iso-bed" draggable="true" src="iso-bed-nobg.png" alt="bed">
