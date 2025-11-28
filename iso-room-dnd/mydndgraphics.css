@@ -7,16 +7,11 @@ body {
     background-color: #f2f2f2;
 }
 
-#overall-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
 #main-content {
     display: flex;
     flex: 1;
     width: 100%;
+    height: 100%;
 }
 
 #player-sidebar {
@@ -25,8 +20,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     min-width: 166px;
+    overflow-y: auto;
 }
 
 #input-container {
