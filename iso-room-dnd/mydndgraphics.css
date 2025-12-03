@@ -44,8 +44,10 @@ body {
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
+    position: relative;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
+    z-index: 1;
 }
 
 #scroll-menu::-webkit-scrollbar {
@@ -67,7 +69,7 @@ body {
     width: 100%;
     height: auto;
     cursor: pointer;
-    position: relative;
+    position: relative;    
 }
 
 #central-content {
@@ -149,6 +151,13 @@ body {
     .furn-container {
         height: 90%;
         margin-left: 1%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .furniture {
+        height: 100%;
+        width: auto;
     }
 
     .scroll-menu {
@@ -160,5 +169,6 @@ body {
         overflow-x: scroll;
     }
 
+    
 
 } 
