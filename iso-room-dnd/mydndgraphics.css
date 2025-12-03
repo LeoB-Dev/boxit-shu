@@ -22,6 +22,13 @@ body {
     align-items: center;
     min-width: 166px;
     overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+#player-sidebar::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome, Safari and Opera */
 }
 
 #input-container {
@@ -52,6 +59,7 @@ body {
     border-radius: 6px;
     position: relative;
     margin-top: 10px;
+    z-index: 999;
 }
 
 
@@ -60,7 +68,7 @@ body {
     height: auto;
     cursor: pointer;
     position: relative;
-    z-index: 99;
+    z-index: 999;
 }
 
 #central-content {
@@ -115,21 +123,26 @@ body {
     }
 
     #player-sidebar {
-        height: 25%;
+        height: 30%;
         width: 100%;
-        overflow-x: auto;
     }
 
     #input-container {
         width: 120px;
         align-self: start;
-        margin-left: 10px;
+        margin-left: 5px;
     }
 
     .scroll-menu {
         flex-direction: row;
-        height: 37.5%;
+        height: 47.5%;
+        width: 100%;
         align-items: center;
+        overflow-x: auto;
+    }
+
+    .scroll-menu::-webkit-scrollbar {
+        width: 0;
     }
 
     #search-bar {
@@ -140,8 +153,6 @@ body {
 
     .furn-container {
         height: 100%;
-        width: 25%;
         margin-left: 1%;
-        position: static;
     }
 } 
