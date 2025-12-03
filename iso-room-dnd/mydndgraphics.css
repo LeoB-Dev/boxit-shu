@@ -60,16 +60,14 @@ body {
     border-radius: 6px;
     position: relative;
     margin-top: 10px;
-    z-index: 999;
 }
 
 
-#iso-bed {
+.furniture {
     width: 100%;
     height: auto;
     cursor: pointer;
     position: relative;
-    z-index: 999;
 }
 
 #central-content {
@@ -132,6 +130,25 @@ body {
         width: 120px;
         align-self: start;
         margin-left: 5px;
+        height: 20px; /*removable*/
+        margin-bottom: 10px; /*removable*/
+    }
+
+    #search-bar {
+        width: 120px;
+        height: 20px;
+        margin-left: 1%; /*removable*/
+        border-radius: 5px; /*removable*/
+        margin-top: 10px; /*removable*/
+        margin-bottom: 10px; /*removable*/
+        width: 100%; /*removable*/
+        height: 20px; /*removable*/
+        box-sizing: border-box; /*removable*/
+    }
+
+    .furn-container {
+        height: 90%;
+        margin-left: 1%;
     }
 
     .scroll-menu {
@@ -143,18 +160,5 @@ body {
         overflow-x: scroll;
     }
 
-    .scroll-menu::-webkit-scrollbar {
-        width: 0;
-    }
 
-    #search-bar {
-        width: 120px;
-        height: 20px;
-        margin-left: 1%;
-    }
-
-    .furn-container {
-        height: 90%;
-        margin-left: 1%;
-    }
 } 
