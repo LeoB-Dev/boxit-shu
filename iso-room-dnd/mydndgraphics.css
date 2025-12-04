@@ -43,7 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     position: relative;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
@@ -58,7 +58,7 @@ body {
 .furn-container {
     background-color: white;
     width: 85%;
-    aspect-ratio: 553/431;
+    aspect-ratio: 300/240; /*Height cannot be a percentage, perhaps needs another container */
     border-radius: 6px;
     position: relative;
     margin-top: 10px;
@@ -66,10 +66,16 @@ body {
 
 
 .furniture {
-    width: 100%;
+    width: 95%;
     height: auto;
     cursor: pointer;
-    position: relative;    
+    position: relative;
+    z-index: 999;
+}
+
+#iso-window {
+    width: 30%;
+    z-index: 998;
 }
 
 #central-content {

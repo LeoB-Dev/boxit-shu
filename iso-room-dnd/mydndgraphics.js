@@ -4,9 +4,9 @@ $.get("../navbar.html", function(data){
 
 let newX = 0, newY = 0, startX = 0, startY = 0;
 
-const bed = document.getElementById('iso-bed')
+const furniture = document.getElementsByClassName('furniture')[1];
 
-bed.addEventListener('mousedown', mouseDown)
+furniture.addEventListener('mousedown', mouseDown)
 
 function mouseDown(e){
     startX = e.clientX
@@ -23,13 +23,15 @@ function mouseMove(e){
     startX = e.clientX
     startY = e.clientY
 
-    bed.style.top = (bed.offsetTop - newY) + 'px'
-    bed.style.left = (bed.offsetLeft - newX) + 'px'
+    furniture.style.top = (furniture.offsetTop - newY) + 'px'
+    furniture.style.left = (furniture.offsetLeft - newX) + 'px'
 }
 
 function mouseUp(e){
     document.removeEventListener('mousemove', mouseMove)
 }
+
+
 
 function showSidebar(){
     const sidebar = document.querySelector('.sidebar');
