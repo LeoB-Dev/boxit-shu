@@ -35,15 +35,18 @@ body {
     margin-bottom: 10px;
     width: 100%;
     height: 20px;
-    border: 1px solid white;
+    border: 1px solid #f2f2f2;
+    background-color: #f2f2f2;
     box-sizing: border-box;
+
 }
 
 .scroll-menu {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* overflow-y: auto; */
+    width: 100%;
+    overflow-y: auto;
     position: relative;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
@@ -56,12 +59,15 @@ body {
 }
 
 .furn-container {
-    background-color: white;
+    background-color: #f2f2f2;
     width: 85%;
     aspect-ratio: 300/240; /*Height cannot be a percentage, perhaps needs another container */
     border-radius: 6px;
     position: relative;
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 
