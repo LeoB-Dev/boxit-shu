@@ -68,6 +68,10 @@ Rooms
 https://codepen.io/DrKain/pen/RaOmGx
 https://codepen.io/TemplateDev/pen/KwKRRJm 
 
+Python server at: http://localhost:8000/boxit-shu/iso-room-dnd/mydndgraphics.html
+
+run python server with python -m http.server 8000
+
 Art: 
 window: https://www.vecteezy.com/vector-art/69657269-isometric-window-wooden-closed-window-interior-elements-furniture-elements-isometric
 

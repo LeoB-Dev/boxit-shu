@@ -91,7 +91,7 @@ body {
     position: relative;
 }
 
-.room-left{
+.room-right-actual{
     height: 50%;
     width: 50%;
     background-color: #d3d3d3;
@@ -112,7 +112,7 @@ body {
 }
 
 
-.room-top{
+.room-bottom{
     /* Copy and use this as the small one*/
     height: 50%;
     width: 50%;

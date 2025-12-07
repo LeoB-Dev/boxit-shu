@@ -12,7 +12,6 @@
 					height: 10
 				}
 
-				// Get reference to the canvas element and its 2D drawing context
 				var canvas = document.getElementById('myCanvas');
 				var c = canvas.getContext('2d');
 
@@ -21,15 +20,12 @@
 				// If undefined/null, the tile is empty
 				var tileMap = [];
 
-				// Load the empty green diamond tile image
 				var tile = new Image();
 				tile.src = "tile.png";
 
-				// Load the filled brown diamond tile image
 				var dirt = new Image();
 				dirt.src = "dirt.png";
 
-				// Listen for mouse clicks on the canvas
 				canvas.addEventListener('mousedown', handleMouseDown, false);
 
 				// Once the tile image loads, draw the initial grid
@@ -45,8 +41,13 @@
 
 					// CENTER THE GRID HORIZONTALLY:
 					// canvas.width / 2 = center of canvas
-					// tile.width / 2 = half the tile width
-					// Subtracting gives us the X position where the top tile should start
+					// tile.width / 2 = half the tile width (remember this is the tile width not the dirt width)
+					// Subtracting gives us the X position where the top tile should start (why?? need to see the maths)
+					//|<-------------- 700px ------------>|<------------ 700px ------------->|
+					//									  ↑ canvas center
+                    //         		  |<------100px------>|<------100px------>|
+                    //                				    [TILE]
+
 					gridOffsetX += (canvas.width / 2) - (tile.width / 2);
 
 					// ═══════════════════════════════════════════════════════════════
@@ -57,7 +58,7 @@
 					// coordinates (row, col)
 					//
 					// ISOMETRIC PROJECTION BASICS:
-					// In isometric view, a square grid is rotated 45° and squashed vertically ?? what does squashed mean technically?
+					// In isometric view, a square grid is rotated 45° and squashed vertically (by how much ??
 					// This means:
 					// - Moving right 1 tile = moving diagonally down-right on screen
 					// - Moving down 1 tile = moving diagonally down-left on screen
