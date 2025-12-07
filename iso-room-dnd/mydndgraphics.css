@@ -91,7 +91,7 @@ body {
     position: relative;
 }
 
-.room-right-actual{
+#room-right{
     height: 50%;
     width: 50%;
     background-color: #d3d3d3;
@@ -101,7 +101,7 @@ body {
     transform-origin: bottom right;
 }
 
-.room-right{
+#room-left{
     height: 50%;
     width: 50%;
     background-color: #bebebe;
@@ -112,13 +112,12 @@ body {
 }
 
 
-.room-bottom{
+#room-bottom{
     /* Copy and use this as the small one*/
     height: 50%;
     width: 50%;
     position: absolute;
     background-color: #54513f;
-    transform-origin: 0 0;
     bottom: 50%;
     transform: rotate(210deg) skew(-30deg) scaleY(0.864);
     transform-origin: bottom right;
