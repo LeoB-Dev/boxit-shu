@@ -171,6 +171,10 @@ body {
         width: auto;
     }
 
+    .furniture.dropped {
+        height: 75%;
+    }
+
     .scroll-menu {
         flex-direction: row;
         height: 50%;
@@ -179,7 +183,4 @@ body {
         overflow-y: visible;
         overflow-x: scroll;
     }
-
-    
-
 } 

@@ -29,12 +29,14 @@ for (const zone of dropZones) {
 
             if (zone.id === "room-bottom") {
                 console.log('child element appended to bottom dropzone');
+                draggedElement.classList.add('dropped');
                 draggedElement.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-210deg);");  // 1 / 0.864, you need to divide by 0.864 which is the same as multipling by 1 / 0.864
                 draggedElement.style.left = "20%";
                 draggedElement.style.top = "20%";
             }
             else if (zone.id === "room-left") {
                 console.log('child element appended to left dropzone');
+                draggedElement.classList.add('dropped');
                 draggedElement.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(30deg);");
                 draggedElement.style.left = "35%";
                 draggedElement.style.top = "10%";
@@ -42,10 +44,16 @@ for (const zone of dropZones) {
             } 
             else if (zone.id === "room-right") {
                 console.log('child element appended to right dropzone');
+                draggedElement.classList.add('dropped');
                 draggedElement.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-90deg);");
 
             }
             
+            else if (zone.classList.contains("furn-container") && zone.classList.contains("dropzone")) {
+                console.log('classList.contains is functioning');
+                // draggedElement.classList.add('dropped');
+                draggedElement.setAttribute("style", "transform: none;");
+            }
         }
     });
 }
