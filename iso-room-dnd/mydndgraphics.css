@@ -71,7 +71,6 @@ body {
     margin-top: 0;
 }
 
-
 .furniture {
     width: 95%;
     height: auto;
@@ -158,20 +157,24 @@ body {
     #player-sidebar {
         height: 35%;
         width: 100%;
-        box-sizing: border-box; /* ADD THIS */
-        padding-bottom: 15px; /* ADD THIS - creates bottom space */
+        padding-bottom: 15px; 
     }
 
     #input-container {
         width: 120px;
         align-self: start;
         margin-left: 5px;
-        margin-bottom: 5px; /*removable*/
+    }
+
+    #bed-container {
+        margin-top: 10px;
     }
 
     #search-bar {
         width: 120px;
         height: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
     .furn-container {
