@@ -83,6 +83,22 @@ body {
     width: 40%;
 }
 
+#iso-desk.furniture.dropped {
+    width: 80%;
+}
+
+#iso-chair.furniture.dropped {
+    width: 35%;
+}
+
+#iso-lamp.furniture.dropped {
+    width: 43%;
+}
+
+#iso-tv.furniture.dropped {
+    width: 43%;
+}
+
 #iso-window {
     width: 30%;
     z-index: 998;

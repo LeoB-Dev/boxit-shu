@@ -16,19 +16,31 @@ function artWallPos (e) {
     e.style.top = "17%";
 }
 
+function tvWallPos (e) {
+    e.style.left = "30%";
+    e.style.top = "20%";
+}
+
 function roomLeftDropNScale (e) {
     e.classList.add('dropped');
+    console.log('child element appended to left dropzone');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(30deg);");
+    e.setAttribute("src", e.src.replace("-rev.png", ".png"));
+    e.style.position = "fixed";
 }
 
 function roomRightDropNScale (e) {
     e.classList.add('dropped');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-90deg);");
+    console.log('child element appended to right dropzone');
+    e.setAttribute("src", e.src.replace(".png", "-rev.png")); // replace() doesn't modify the original string — it returns a new string with the replacement. setAttribute does.
+    e.style.position = "fixed";
 }
 
 function roomBottomDropNScale (e) {
     e.classList.add('dropped');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-210deg);");  // 1 / 0.864, you need to divide by 0.864 which is the same as multipling by 1 / 0.864
+    e.style.position = "fixed";
 }
 
 function reverseImg (e) {
@@ -54,6 +66,8 @@ for (const zone of dropZones) {
         console.log('removed drag-over');
 
         const draggedElement = document.querySelector(".dragging");
+
+        
         if (draggedElement) {
             zone.appendChild(draggedElement);
             console.log(draggedElement);
@@ -68,47 +82,67 @@ for (const zone of dropZones) {
             else if (zone.id === "room-bottom" && draggedElement.id === "iso-couch") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
-                    draggedElement.style.left = "19%";
-                    draggedElement.style.top = "42%";
+                    draggedElement.style.left = "20%";
+                    draggedElement.style.top = "50%";
+            }
+            
+            else if (zone.id === "room-bottom" && draggedElement.id === "iso-desk") {
+                console.log('child element appended to bottom dropzone');
+                roomBottomDropNScale(draggedElement);
+                    draggedElement.style.left = "50%"; 
+                    draggedElement.style.top = "32%";
+            }
+            
+            else if (zone.id === "room-bottom" && draggedElement.id === "iso-chair") {
+                console.log('child element appended to bottom dropzone');
+                roomBottomDropNScale(draggedElement);
+                    draggedElement.style.left = "60%"; // + = up left, - = down right
+                    draggedElement.style.top = "50%"; // + = up right, - = down left
+            }
+
+            else if (zone.id === "room-bottom" && draggedElement.id === "iso-lamp") {
+                console.log('child element appended to bottom dropzone');
+                roomBottomDropNScale(draggedElement);
+                    draggedElement.style.left = "30%";
+                    draggedElement.style.top = "65%";
             }
 
 
             else if (zone.id === "room-left") {
                 if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
-                    console.log('child element appended to left dropzone');
-                    draggedElement.setAttribute("src", draggedElement.src.replace("-rev.png", ".png"));
                     roomLeftDropNScale(draggedElement);
                     artWallPos(draggedElement);
                 } 
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window"){
-                    console.log('child element appended to left dropzone');
-                    draggedElement.setAttribute("src", draggedElement.src.replace("-rev.png", ".png"));
                     roomLeftDropNScale(draggedElement);
                     windowWallPos(draggedElement);
                 }
                 
+                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv"){
+                    roomLeftDropNScale(draggedElement);
+                    tvWallPos(draggedElement);
+                }
+                
                 else {
-                    console.log('child element appended to left dropzone');
                     roomLeftDropNScale(draggedElement);
                 }
             }
 
             else if (zone.id === "room-right") {
                 if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window") {
-                    console.log('child element appended to right dropzone');
-                    draggedElement.setAttribute("src", draggedElement.src.replace(".png", "-rev.png")); // replace() doesn't modify the original string — it returns a new string with the replacement. setAttribute does.
-                    console.log(draggedElement);
                     roomRightDropNScale(draggedElement);
                     windowWallPos(draggedElement);
                 } 
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
-                    console.log('child element appended to right dropzone');
-                    draggedElement.setAttribute("src", draggedElement.src.replace(".png", "-rev.png")); // replace() doesn't modify the original string — it returns a new string with the replacement. setAttribute does.
-                    console.log(draggedElement);
                     roomRightDropNScale(draggedElement);
                     artWallPos(draggedElement);
+                }
+                
+                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv") {
+                    roomRightDropNScale(draggedElement);
+                    tvWallPos(draggedElement);
                 }
                 
                 else if (draggedElement.classList.contains("leftright-deny")){
