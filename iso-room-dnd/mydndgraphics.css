@@ -60,7 +60,7 @@ body {
     width: 85%;
     aspect-ratio: 300/240; /*Height cannot be a percentage, perhaps needs another container */
     border-radius: 6px;
-    position: relative;
+    position: relative; 
     margin-top: 10px;
     display: flex;
     flex-direction: column;
