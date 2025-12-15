@@ -114,3 +114,24 @@
         <li><a href="sign-in-2/sign-in-2.html" id="sign-in">Sign In</a></li>
     </ul>
 </nav>
+<script>
+    function showSidebar(){
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.display = 'flex';
+
+        const mainNavItems = document.querySelectorAll('.hideOnMobile');
+        for (const navItem of mainNavItems) {
+            navItem.style.display = 'none';
+        }
+    }
+
+    function hideSidebar(){
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.style.display = 'none';
+        
+        const mainNavItems = document.querySelectorAll('.hideOnMobile');
+        for (const navItem of mainNavItems) {
+            navItem.style.display = 'flex';
+        }
+    }
+</script>
