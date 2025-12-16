@@ -36,11 +36,19 @@ for (const zone of dropZones) {
         const draggedElement = document.querySelector(".dragging");
 
         
+        // if (draggedElement) {
+        //     zone.appendChild(draggedElement);
+        //     console.log(draggedElement);
+        //     draggedElement.classList.add('dropped');
+        //     draggedElement.setAttribute("style", "transform: scaleY(1);");
+        //     draggedElement.style.position = "fixed";
+        // }
+
         if (draggedElement) {
             zone.appendChild(draggedElement);
             console.log(draggedElement);
             draggedElement.classList.add('dropped');
-            draggedElement.setAttribute("style", "transform: scaleY(1);");
+            draggedElement.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-210deg);");
             draggedElement.style.position = "fixed";
         }
     });
