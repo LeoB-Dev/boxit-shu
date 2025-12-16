@@ -2,7 +2,8 @@ let x = 0;
 while (x < 10) {
     const newSquare = document.createElement("div");
     newSquare.classList.add('row');
-    document.body.appendChild(newSquare);
+    const gridContainer = document.getElementById("grid-container");
+    gridContainer.appendChild(newSquare);
     x++;
     let y = 0;
 }
