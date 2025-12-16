@@ -10,9 +10,9 @@ while (x < 10) {
 for (let i=0; i < 10; i++) {
     const rowElement = document.getElementsByClassName("row");
     for (let i=0; i < 10; i++) {
-    const newCell = document.createElement("div");
-    newCell.classList.add('cell');
-    rowElement[i].appendChild(newCell);
+        const newCell = document.createElement("div");
+        newCell.classList.add('cell');
+        rowElement[i].appendChild(newCell);
     }
 }
 
