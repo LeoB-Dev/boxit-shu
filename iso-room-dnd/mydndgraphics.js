@@ -2,8 +2,6 @@ $.get("../navbar.html", function(data){
     $("#nav").replaceWith(data);
 });
 
-
-// CodePen drag and drop version (need to change room elements to id's not classes), thus I am temporarily only selecting this class https://codepen.io/BitsPls/pen/XWvwVpE
 const dropZones = document.getElementsByClassName("dropzone");
 
 function windowWallPos (e) {
