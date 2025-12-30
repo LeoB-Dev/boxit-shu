@@ -28,12 +28,39 @@
         margin-right: auto;
     }
 
+
     nav a{
         padding: 2px 4px;
         text-decoration: none;
         color: black;
     }
 
+    .dropdown-menu-title {
+        position: relative;
+        justify-self: center;
+    }
+
+    .dropdown-menu-items {
+        display: flex;
+        flex-direction: column;
+        background: #ddd;
+        height: 0;
+        left: 0;
+        opacity: 0;
+        position: relative;
+        transition: all .5s ease;
+        position: absolute;
+        align-items: center;
+    }
+
+    .dropdown-menu-title:hover .dropdown-menu-items {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transform: translateY(0);
+    }
 
     #sign-in {
         color: #f2f2f2;
@@ -103,8 +130,8 @@
 
         <li class="hideOnMobile dropdown-menu-title"><a href="#">Rooms</a>
             <ul class="dropdown-menu-items">
-                <li class="hideOnMobile"><a href="#">Create a Room</a></li>
-                <li class="hideOnMobile"><a href="#">My Rooms</a></li>
+                <li class="hideOnMobile" id="create-room"><a href="#">Create a Room</a></li>
+                <li class="hideOnMobile" id="my-rooms"><a href="#">My Rooms</a></li>
             </ul>
         </li>
 
@@ -140,3 +167,5 @@
         }
     }
 </script>
+
+<!-- See: samplers\navbar-dropdown.html -->
