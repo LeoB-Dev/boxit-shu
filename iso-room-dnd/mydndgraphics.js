@@ -47,9 +47,108 @@ function saveState() {
     localStorage.setItem('dragPositions', JSON.stringify(positions));
 }
 
-function addIsoStyles(){
+function addIsoStyles(dropZone, droppedElement) {
+    if (dropZone.id === "room-bottom" && droppedElement.id === "iso-bed") {
+        console.log('child element appended to bottom dropdropZone');
+        roomBottomDropNScale(droppedElement);
+        droppedElement.style.left = "20%";
+        droppedElement.style.top = "20%";
+        saveState();
+    }
+
+    else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-couch") {
+        console.log('child element appended to bottom dropdropZone');
+        roomBottomDropNScale(droppedElement);
+        droppedElement.style.left = "20%";
+        droppedElement.style.top = "50%";
+        saveState();
+    }
     
+    else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-desk") {
+        console.log('child element appended to bottom dropdropZone');
+        roomBottomDropNScale(droppedElement);
+        droppedElement.style.left = "50%"; 
+        droppedElement.style.top = "32%";
+        saveState();
+    }
+    
+    else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-chair") {
+        console.log('child element appended to bottom dropdropZone');
+        roomBottomDropNScale(droppedElement);
+        droppedElement.style.left = "60%"; // + = up left, - = down right
+        droppedElement.style.top = "50%"; // + = up right, - = down left
+        saveState();
+    }
+
+    else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-lamp") {
+        console.log('child element appended to bottom dropdropZone');
+        roomBottomDropNScale(droppedElement);
+        droppedElement.style.left = "30%";
+        droppedElement.style.top = "65%";
+        saveState();
+    }
+
+
+    else if (dropZone.id === "room-left") {
+        if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-art") {
+            roomLeftDropNScale(droppedElement);
+            artWallPos(droppedElement);
+            saveState();
+        } 
+        
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-window"){
+            roomLeftDropNScale(droppedElement);
+            windowWallPos(droppedElement);
+            saveState();
+        }
+        
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-tv"){
+            roomLeftDropNScale(droppedElement);
+            tvWallPos(droppedElement);
+            saveState();
+        }
+        
+        else {
+            roomLeftDropNScale(droppedElement);
+            saveState();
+        }
+    }
+
+    else if (dropZone.id === "room-right") {
+        if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-window") {
+            roomRightDropNScale(droppedElement);
+            windowWallPos(droppedElement);
+            saveState();
+        } 
+        
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-art") {
+            roomRightDropNScale(droppedElement);
+            artWallPos(droppedElement);
+            saveState();
+        }
+        
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-tv") {
+            roomRightDropNScale(droppedElement);
+            tvWallPos(droppedElement);
+            saveState();
+        }
+        
+        else if (droppedElement.classList.contains("leftright-deny")){
+            console.log('leftright-deny initiated');
+            // dropZone.classList.remove("dragging");
+            saveState();
+        }
+    }
+
+
+    else if (dropZone.classList.contains("furn-container") && dropZone.classList.contains("dropzone")) {
+        console.log('child element appended to furn-container');
+        droppedElement.classList.add('dropped');
+        droppedElement.setAttribute("style", "transform: none;");
+        saveState();
+    }
 }
+
 const dropZones = document.getElementsByClassName("dropzone");
 for (const zone of dropZones) {
     zone.addEventListener("dragover", (e) => {
@@ -72,109 +171,8 @@ for (const zone of dropZones) {
     if (draggedElement) {
         zone.appendChild(draggedElement);
         console.log(draggedElement);
-
-            if (zone.id === "room-bottom" && draggedElement.id === "iso-bed") {
-                console.log('child element appended to bottom dropzone');
-                roomBottomDropNScale(draggedElement);
-                draggedElement.style.left = "20%";
-                draggedElement.style.top = "20%";
-                saveState();
-            }
-
-            else if (zone.id === "room-bottom" && draggedElement.id === "iso-couch") {
-                console.log('child element appended to bottom dropzone');
-                roomBottomDropNScale(draggedElement);
-                draggedElement.style.left = "20%";
-                draggedElement.style.top = "50%";
-                saveState();
-            }
-            
-            else if (zone.id === "room-bottom" && draggedElement.id === "iso-desk") {
-                console.log('child element appended to bottom dropzone');
-                roomBottomDropNScale(draggedElement);
-                draggedElement.style.left = "50%"; 
-                draggedElement.style.top = "32%";
-                saveState();
-            }
-            
-            else if (zone.id === "room-bottom" && draggedElement.id === "iso-chair") {
-                console.log('child element appended to bottom dropzone');
-                roomBottomDropNScale(draggedElement);
-                draggedElement.style.left = "60%"; // + = up left, - = down right
-                draggedElement.style.top = "50%"; // + = up right, - = down left
-                saveState();
-            }
-
-            else if (zone.id === "room-bottom" && draggedElement.id === "iso-lamp") {
-                console.log('child element appended to bottom dropzone');
-                roomBottomDropNScale(draggedElement);
-                draggedElement.style.left = "30%";
-                draggedElement.style.top = "65%";
-                saveState();
-            }
-
-
-            else if (zone.id === "room-left") {
-                if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
-                    roomLeftDropNScale(draggedElement);
-                    artWallPos(draggedElement);
-                    saveState();
-                } 
-                
-                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window"){
-                    roomLeftDropNScale(draggedElement);
-                    windowWallPos(draggedElement);
-                    saveState();
-                }
-                
-                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv"){
-                    roomLeftDropNScale(draggedElement);
-                    tvWallPos(draggedElement);
-                    saveState();
-                }
-                
-                else {
-                    roomLeftDropNScale(draggedElement);
-                    saveState();
-                }
-            }
-
-            else if (zone.id === "room-right") {
-                if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window") {
-                    roomRightDropNScale(draggedElement);
-                    windowWallPos(draggedElement);
-                    saveState();
-                } 
-                
-                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
-                    roomRightDropNScale(draggedElement);
-                    artWallPos(draggedElement);
-                    saveState();
-                }
-                
-                else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv") {
-                    roomRightDropNScale(draggedElement);
-                    tvWallPos(draggedElement);
-                    saveState();
-                }
-                
-                else if (draggedElement.classList.contains("leftright-deny")){
-                    console.log('leftright-deny initiated');
-                    // zone.classList.remove("dragging");
-                    saveState();
-                }
-            }
-
-
-            else if (zone.classList.contains("furn-container") && zone.classList.contains("dropzone")) {
-                console.log('child element appended to furn-container');
-                draggedElement.classList.add('dropped');
-                draggedElement.setAttribute("style", "transform: none;");
-                saveState();
-            }
+        addIsoStyles(zone, draggedElement);
         }
-
-
     });
 }
 
@@ -188,6 +186,7 @@ window.addEventListener('load', () => {
         if (parentElement) {
             parentElement.appendChild(element);
             // addIsoStyles(); needs to go in here
+            addIsoStyles(parentElement, element);
         }
     }
 });
