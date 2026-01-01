@@ -2,8 +2,6 @@ $.get("../navbar.html", function(data){
     $("#nav").replaceWith(data);
 });
 
-const dropZones = document.getElementsByClassName("dropzone");
-
 function windowWallPos (e) {
     e.style.left = "35%";
     e.style.top = "20%";
@@ -41,11 +39,18 @@ function roomBottomDropNScale (e) {
     e.style.position = "fixed";
 }
 
-function reverseImg (e) {
-
+function saveState() {
+    const positions = {};
+    document.querySelectorAll('.furniture').forEach(item => {
+        positions[item.id] = item.parentElement.id; // create key value pair
+    });
+    localStorage.setItem('dragPositions', JSON.stringify(positions));
 }
 
-
+function addIsoStyles(){
+    
+}
+const dropZones = document.getElementsByClassName("dropzone");
 for (const zone of dropZones) {
     zone.addEventListener("dragover", (e) => {
         e.preventDefault(); // Parentheses invoke function - browsers default to not allowing elements to be drop targets
@@ -63,46 +68,49 @@ for (const zone of dropZones) {
         zone.classList.remove("drag-over");
         console.log('removed drag-over');
 
-        const draggedElement = document.querySelector(".dragging");
-
-        
-        if (draggedElement) {
-            zone.appendChild(draggedElement);
-            console.log(draggedElement);
+    const draggedElement = document.querySelector(".dragging");
+    if (draggedElement) {
+        zone.appendChild(draggedElement);
+        console.log(draggedElement);
 
             if (zone.id === "room-bottom" && draggedElement.id === "iso-bed") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
                 draggedElement.style.left = "20%";
                 draggedElement.style.top = "20%";
+                saveState();
             }
 
             else if (zone.id === "room-bottom" && draggedElement.id === "iso-couch") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
-                    draggedElement.style.left = "20%";
-                    draggedElement.style.top = "50%";
+                draggedElement.style.left = "20%";
+                draggedElement.style.top = "50%";
+                saveState();
             }
             
             else if (zone.id === "room-bottom" && draggedElement.id === "iso-desk") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
-                    draggedElement.style.left = "50%"; 
-                    draggedElement.style.top = "32%";
+                draggedElement.style.left = "50%"; 
+                draggedElement.style.top = "32%";
+                saveState();
             }
             
             else if (zone.id === "room-bottom" && draggedElement.id === "iso-chair") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
-                    draggedElement.style.left = "60%"; // + = up left, - = down right
-                    draggedElement.style.top = "50%"; // + = up right, - = down left
+                draggedElement.style.left = "60%"; // + = up left, - = down right
+                draggedElement.style.top = "50%"; // + = up right, - = down left
+                saveState();
             }
 
             else if (zone.id === "room-bottom" && draggedElement.id === "iso-lamp") {
                 console.log('child element appended to bottom dropzone');
                 roomBottomDropNScale(draggedElement);
-                    draggedElement.style.left = "30%";
-                    draggedElement.style.top = "65%";
+                draggedElement.style.left = "30%";
+                draggedElement.style.top = "65%";
+                saveState();
             }
 
 
@@ -110,20 +118,24 @@ for (const zone of dropZones) {
                 if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
                     roomLeftDropNScale(draggedElement);
                     artWallPos(draggedElement);
+                    saveState();
                 } 
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window"){
                     roomLeftDropNScale(draggedElement);
                     windowWallPos(draggedElement);
+                    saveState();
                 }
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv"){
                     roomLeftDropNScale(draggedElement);
                     tvWallPos(draggedElement);
+                    saveState();
                 }
                 
                 else {
                     roomLeftDropNScale(draggedElement);
+                    saveState();
                 }
             }
 
@@ -131,21 +143,25 @@ for (const zone of dropZones) {
                 if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-window") {
                     roomRightDropNScale(draggedElement);
                     windowWallPos(draggedElement);
+                    saveState();
                 } 
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-art") {
                     roomRightDropNScale(draggedElement);
                     artWallPos(draggedElement);
+                    saveState();
                 }
                 
                 else if (draggedElement.classList.contains("bottom-deny") && draggedElement.id === "iso-tv") {
                     roomRightDropNScale(draggedElement);
                     tvWallPos(draggedElement);
+                    saveState();
                 }
                 
                 else if (draggedElement.classList.contains("leftright-deny")){
                     console.log('leftright-deny initiated');
                     // zone.classList.remove("dragging");
+                    saveState();
                 }
             }
 
@@ -154,10 +170,27 @@ for (const zone of dropZones) {
                 console.log('child element appended to furn-container');
                 draggedElement.classList.add('dropped');
                 draggedElement.setAttribute("style", "transform: none;");
+                saveState();
             }
         }
+
+
     });
 }
+
+
+/* Try adding the save state function here and calling it each time in each else if, note that they aren't in a class called draggable rn (equivalent is furniture)*/
+window.addEventListener('load', () => {
+    const positions = JSON.parse(localStorage.getItem('dragPositions')) || {};
+    for (const [id, parent] of Object.entries(positions)) {
+        const element = document.getElementById(id);
+        const parentElement = document.getElementById(parent);
+        if (parentElement) {
+            parentElement.appendChild(element);
+            // addIsoStyles(); needs to go in here
+        }
+    }
+});
 
 document.body.addEventListener("dragstart", (e) => {
     if (e.target.classList.contains("furniture")) {
@@ -213,3 +246,4 @@ function hideSidebar(){
 
 
 
+/*Credit for saveState and restoreState is  https://blog.pixelfreestudio.com/advanced-techniques-for-using-html5-drag-and-drop/*/
