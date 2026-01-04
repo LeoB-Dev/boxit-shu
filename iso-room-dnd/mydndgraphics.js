@@ -47,6 +47,13 @@ function saveState() {
     localStorage.setItem('dragPositions', JSON.stringify(positions));
 }
 
+function rejectWrongSide(){
+    // if class = LeftRIghtDeny 
+        // don't allow onto left or right
+        // else if class = bottomdeny
+            // don't allow onto bottom
+}
+
 function addIsoStyles(dropZone, droppedElement) {
     if (dropZone.id === "room-bottom" && droppedElement.id === "iso-bed") {
         console.log('child element appended to bottom dropdropZone');
@@ -150,11 +157,26 @@ function addIsoStyles(dropZone, droppedElement) {
 }
 
 const dropZones = document.getElementsByClassName("dropzone");
+let draggedElement = null; // declare var in outer scope
+
+document.body.addEventListener("dragstart", (e) => {
+    if (e.target.classList.contains("furniture")) {
+        draggedElement = e.target; // update var (e.target can be used for zone and draggedElement)
+        e.target.classList.add("dragging");
+        console.log("dragging started");
+    }
+});
+
 for (const zone of dropZones) {
+     
     zone.addEventListener("dragover", (e) => {
-        e.preventDefault(); // Parentheses invoke function - browsers default to not allowing elements to be drop targets
-        zone.classList.add("drag-over");
-        console.log('started drag-over');
+        if (draggedElement.classList.contains("bottom-deny") && (zone.id === "room-right" || zone.id === "room-left" || zone.classList.contains("furn-container"))){
+            e.preventDefault(); 
+            zone.classList.add("drag-over");
+        } else if (draggedElement.classList.contains("leftright-deny") && (zone.id === "room-bottom" || zone.classList.contains("furn-container"))) {
+            e.preventDefault(); 
+            zone.classList.add("drag-over");
+        }
     });
 
     zone.addEventListener("dragleave", () => {
@@ -166,18 +188,17 @@ for (const zone of dropZones) {
         e.preventDefault();
         zone.classList.remove("drag-over");
         console.log('removed drag-over');
+        const draggedElement = document.querySelector(".dragging");
+       
 
-    const draggedElement = document.querySelector(".dragging");
-    if (draggedElement) {
-        zone.appendChild(draggedElement);
-        console.log(draggedElement);
-        addIsoStyles(zone, draggedElement);
-        }
-    });
+        if (draggedElement) {
+            zone.appendChild(draggedElement);
+            console.log(draggedElement);
+            addIsoStyles(zone, draggedElement);
+            }
+        });
 }
 
-
-/* Try adding the save state function here and calling it each time in each else if, note that they aren't in a class called draggable rn (equivalent is furniture)*/
 window.addEventListener('load', () => {
     const positions = JSON.parse(localStorage.getItem('dragPositions')) || {};
     for (const [id, parent] of Object.entries(positions)) {
@@ -185,16 +206,8 @@ window.addEventListener('load', () => {
         const parentElement = document.getElementById(parent);
         if (parentElement) {
             parentElement.appendChild(element);
-            // addIsoStyles(); needs to go in here
             addIsoStyles(parentElement, element);
         }
-    }
-});
-
-document.body.addEventListener("dragstart", (e) => {
-    if (e.target.classList.contains("furniture")) {
-        e.target.classList.add("dragging");
-        console.log("dragging started");
     }
 });
 
@@ -218,8 +231,6 @@ document.body.addEventListener("touchend", (e) => {
         console.log("dragging ended");
     }
 });
-
-// May need to make this whole thing into a function and then reuse it for each side (that that draggble is accepted into)
 
 
 
