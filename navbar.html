@@ -11,7 +11,8 @@
     nav ul {
         padding: 20px;
         font-family: 'Inter', sans-serif;
-        font-weight: 200; /* not working */
+        font-weight: 200;
+        /* not working */
         list-style: none;
         font-size: 13px;
         display: flex;
@@ -24,14 +25,24 @@
         list-style-type: none;
     }
 
-    nav li:first-child{
+    nav li:first-child {
         margin-right: auto;
     }
 
-    nav a{
+    nav a {
         padding: 2px 4px;
         text-decoration: none;
         color: black;
+    }
+
+    /* ul #menu {
+        padding: 0;
+    } */
+
+    li#rooms-menu {
+        padding: 0;
+        text-align: center;
+
     }
 
     #menu {
@@ -41,6 +52,7 @@
         justify-content: center;
         width: 140px;
     }
+
     #menu li {
         display: inline-block;
         position: relative;
@@ -48,49 +60,50 @@
         z-index: 5;
         width: 140px;
     }
-    
-    #menu li a{
+
+    #menu li a {
         padding: 17px 20px;
         display: block;
     }
-    
+
     #menu li:first-child {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
-    
+
     #menu li:last-child {
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
     }
-    
+
     .dropdown {
         overflow: hidden;
         list-style: none;
         position: absolute;
         padding: 0;
         width: 100%;
+        top: 27.5px;
     }
-    
+
     .dropdown div {
         transform: translate(0, -100%);
         transition: all 0.5s 0.1s;
         position: relative;
-        padding-top: 17px;
+        /* padding-top: 17px; */
     }
-    
+
     .dropdown li {
         display: block;
         padding: 0;
         width: 100%;
         background: #d3d3d3;
     }
-    
+
     .dropdown div li:hover {
         background: #ccc;
     }
-    
-    #menu li:nth-child(1):hover ul div{
+
+    #menu li:nth-child(1):hover ul div {
         transform: translate(0, 0);
         /* won't work on mobile */
     }
@@ -104,7 +117,8 @@
 
     .sidebar {
         position: fixed;
-        padding: 0; /* May remove */
+        padding: 0;
+        /* May remove */
         top: 0;
         right: 0;
         height: 100vh;
@@ -112,7 +126,7 @@
         z-index: 999;
         background-color: white;
         box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
-        display: none; 
+        display: none;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
@@ -128,10 +142,11 @@
         /* min-height: 68px; */
         display: flex;
         align-items: center;
-        padding-left: 20px;  /* ADD THIS LINE */
+        padding-left: 20px;
+        /* ADD THIS LINE */
     }
-    
-    .sidebar li:hover{
+
+    .sidebar li:hover {
         background-color: #ccc;
     }
 
@@ -144,7 +159,7 @@
         color: black;
     }
 
-    @media(max-width: 800px){
+    @media(max-width: 800px) {
         .hideOnMobile {
             display: none !important;
         }
@@ -153,7 +168,6 @@
             width: 100%;
         }
     }
-
 </style>
 
 <nav>
@@ -173,18 +187,26 @@
         </ul>
 
         <li class="hideOnMobile"><a href="/sign-in-2/sign-in-2.html" id="sign-in">Sign In</a></li>
-        <li onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#000000"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+        <li onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="28px"
+                    viewBox="0 -960 960 960" width="28px" fill="#000000">
+                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg></a></li>
     </ul>
 
     <ul class="sidebar">
-        <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#000000"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
-        <li><a href="/iso-room-dnd/mydndgraphics.html">Rooms</a></li> <!--Make it so it's not on click but hover and also slides out // This is not working -->
+        <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="28px"
+                    viewBox="0 -960 960 960" width="28px" fill="#000000">
+                    <path
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg></a></li>
+        <li><a href="/iso-room-dnd/mydndgraphics.html">Rooms</a></li>
+        <!--Make it so it's not on click but hover and also slides out // This is not working -->
         <li><a href="/sign-in-2/sign-in-2.html" id="sign-in">Sign In</a></li>
     </ul>
 </nav>
 
 <script>
-    function showSidebar(){
+    function showSidebar() {
         const sidebar = document.querySelector('.sidebar');
         sidebar.style.display = 'flex';
 
@@ -194,10 +216,10 @@
         }
     }
 
-    function hideSidebar(){
+    function hideSidebar() {
         const sidebar = document.querySelector('.sidebar');
         sidebar.style.display = 'none';
-        
+
         const mainNavItems = document.querySelectorAll('.hideOnMobile');
         for (const navItem of mainNavItems) {
             navItem.style.display = 'flex';

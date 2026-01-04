@@ -175,7 +175,7 @@ for (const zone of dropZones) {
         } else if (draggedElement.classList.contains("leftright-deny") && (zone.id === "room-bottom" || zone.classList.contains("furn-container"))) {
             e.preventDefault(); 
             zone.classList.add("drag-over");
-        }
+        } 
     });
 
     zone.addEventListener("dragleave", () => {

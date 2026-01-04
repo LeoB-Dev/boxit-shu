@@ -35,15 +35,6 @@ for (const zone of dropZones) {
 
         const draggedElement = document.querySelector(".dragging");
 
-        
-        // if (draggedElement) {
-        //     zone.appendChild(draggedElement);
-        //     console.log(draggedElement);
-        //     draggedElement.classList.add('dropped');
-        //     draggedElement.setAttribute("style", "transform: scaleY(1);");
-        //     draggedElement.style.position = "fixed";
-        // }
-
         if (draggedElement) {
             zone.appendChild(draggedElement);
             console.log(draggedElement);
