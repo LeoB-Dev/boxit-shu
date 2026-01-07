@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isometric Drag & Drop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            max-width: 700px;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        canvas {
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: move;
+            display: block;
+        }
+
+        .legend {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .legend p {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Isometric Drag & Drop</h1>
+        <p>Drag the colored items. The white dot shows each item's anchor point, which aligns with the cursor position
+            when dropped.</p>
+        <canvas id="canvas" width="600" height="500"></canvas>
+        <div class="legend">
+            <p><strong>Blue:</strong> 1x1 tile</p>
+            <p><strong>Red:</strong> 2x1 tiles</p>
+            <p><strong>Green:</strong> 1x2 tiles</p>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Constants
+        const TILE_WIDTH = 64;
+        const TILE_HEIGHT = 32;
+        const GRID_SIZE = 8;
+        const OFFSET_X = 300;
+        const OFFSET_Y = 50;
+
+        // State
+        let items = [
+            { id: 1, gridX: 2, gridY: 2, width: 1, height: 1, color: '#3b82f6' },
+            { id: 2, gridX: 5, gridY: 1, width: 2, height: 1, color: '#ef4444' },
+            { id: 3, gridX: 1, gridY: 5, width: 1, height: 2, color: '#10b981' }
+        ];
+        let dragging = null;
+
+        // Convert isometric grid coordinates to screen coordinates
+        function isoToScreen(gridX, gridY) {
+            const screenX = (gridX - gridY) * (TILE_WIDTH / 2) + OFFSET_X;
+            const screenY = (gridX + gridY) * (TILE_HEIGHT / 2) + OFFSET_Y;
+            return { screenX, screenY };
+        }
+
+        // Convert screen coordinates to isometric grid coordinates
+        function screenToIso(screenX, screenY) {
+            const x = screenX - OFFSET_X;
+            const y = screenY - OFFSET_Y;
+            const gridX = (x / (TILE_WIDTH / 2) + y / (TILE_HEIGHT / 2)) / 2;
+            const gridY = (y / (TILE_HEIGHT / 2) - x / (TILE_WIDTH / 2)) / 2;
+            return { gridX, gridY };
+        }
+
+        // Draw everything
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1;
+
+            for (let y = 0; y <= GRID_SIZE; y++) {
+                for (let x = 0; x <= GRID_SIZE; x++) {
+                    const pos = isoToScreen(x, y);
+
+                    // Draw tile outline
+                    ctx.beginPath();
+                    const corners = [
+                        isoToScreen(x, y),
+                        isoToScreen(x + 1, y),
+                        isoToScreen(x + 1, y + 1),
+                        isoToScreen(x, y + 1)
+                    ];
+
+                    ctx.moveTo(corners[0].screenX, corners[0].screenY);
+                    corners.forEach(corner => {
+                        ctx.lineTo(corner.screenX, corner.screenY);
+                    });
+                    ctx.closePath();
+                    ctx.stroke();
+
+                    // Draw small dot at grid point
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.beginPath();
+                    ctx.arc(pos.screenX, pos.screenY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Draw items
+            items.forEach(item => {
+                const corners = [
+                    isoToScreen(item.gridX, item.gridY),
+                    isoToScreen(item.gridX + item.width, item.gridY),
+                    isoToScreen(item.gridX + item.width, item.gridY + item.height),
+                    isoToScreen(item.gridX, item.gridY + item.height)
+                ];
+
+                // Draw item fill
+                ctx.fillStyle = dragging && dragging.item.id === item.id ? item.color + '80' : item.color;
+                ctx.beginPath();
+                ctx.moveTo(corners[0].screenX, corners[0].screenY);
+                corners.forEach(corner => {
+                    ctx.lineTo(corner.screenX, corner.screenY);
+                });
+                ctx.closePath();
+                ctx.fill();
+
+                // Draw item outline
+                ctx.strokeStyle = '#1e293b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw anchor point (center of item)
+                const centerPos = isoToScreen(
+                    item.gridX + item.width / 2,
+                    item.gridY + item.height / 2
+                );
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(centerPos.screenX, centerPos.screenY, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Draw dragging preview
+            if (dragging && dragging.currentPos) {
+                const mousePos = dragging.currentPos;
+                const isoPos = screenToIso(mousePos.x, mousePos.y);
+
+                // Snap to grid with anchor point alignment
+                const snappedX = Math.round(isoPos.gridX - dragging.item.width / 2);
+                const snappedY = Math.round(isoPos.gridY - dragging.item.height / 2);
+
+                // Clamp to grid bounds
+                const clampedX = Math.max(0, Math.min(GRID_SIZE - dragging.item.width, snappedX));
+                const clampedY = Math.max(0, Math.min(GRID_SIZE - dragging.item.height, snappedY));
+
+                // Draw preview
+                const corners = [
+                    isoToScreen(clampedX, clampedY),
+                    isoToScreen(clampedX + dragging.item.width, clampedY),
+                    isoToScreen(clampedX + dragging.item.width, clampedY + dragging.item.height),
+                    isoToScreen(clampedX, clampedY + dragging.item.height)
+                ];
+
+                ctx.fillStyle = dragging.item.color + '40';
+                ctx.strokeStyle = dragging.item.color;
+                ctx.setLineDash([5, 5]);
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(corners[0].screenX, corners[0].screenY);
+                corners.forEach(corner => {
+                    ctx.lineTo(corner.screenX, corner.screenY);
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        // Mouse event handlers
+        function handleMouseDown(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const isoPos = screenToIso(mouseX, mouseY);
+
+            // Check if clicking on an item (reverse loop for z-ordering)
+            for (let i = items.length - 1; i >= 0; i--) {
+                const item = items[i];
+                if (
+                    isoPos.gridX >= item.gridX &&
+                    isoPos.gridX <= item.gridX + item.width &&
+                    isoPos.gridY >= item.gridY &&
+                    isoPos.gridY <= item.gridY + item.height
+                ) {
+                    dragging = {
+                        item: item,
+                        startPos: { x: mouseX, y: mouseY },
+                        currentPos: { x: mouseX, y: mouseY }
+                    };
+                    draw();
+                    break;
+                }
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (!dragging) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            dragging.currentPos = { x: mouseX, y: mouseY };
+            draw();
+        }
+
+        function handleMouseUp(e) {
+            if (!dragging) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const isoPos = screenToIso(mouseX, mouseY);
+
+            // Calculate new position with anchor point at cursor
+            const newGridX = Math.round(isoPos.gridX - dragging.item.width / 2);
+            const newGridY = Math.round(isoPos.gridY - dragging.item.height / 2);
+
+            // Clamp to grid bounds
+            const clampedX = Math.max(0, Math.min(GRID_SIZE - dragging.item.width, newGridX));
+            const clampedY = Math.max(0, Math.min(GRID_SIZE - dragging.item.height, newGridY));
+
+            // Update item position
+            items = items.map(item =>
+                item.id === dragging.item.id
+                    ? { ...item, gridX: clampedX, gridY: clampedY }
+                    : item
+            );
+
+            dragging = null;
+            draw();
+        }
+
+        function handleMouseLeave() {
+            dragging = null;
+            draw();
+        }
+
+        // Attach event listeners
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('mouseleave', handleMouseLeave);
+
+        // Initial draw
+        draw();
+    </script>
+</body>
+
+</html>
