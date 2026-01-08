@@ -55,8 +55,10 @@ body {
     width: 100%;
     overflow-y: auto;
     position: relative;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
     z-index: 1;
 }
 
@@ -68,9 +70,10 @@ body {
 .furn-container {
     background-color: #f2f2f2;
     width: 85%;
-    aspect-ratio: 300/240; /*Height cannot be a percentage, perhaps needs another container */
+    aspect-ratio: 300/240;
+    /*Height cannot be a percentage, perhaps needs another container */
     border-radius: 6px;
-    position: relative; 
+    position: relative;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -127,7 +130,7 @@ body {
     position: relative;
 }
 
-#room-right{
+#room-right {
     height: 50%;
     width: 50%;
     background-color: #d3d3d3;
@@ -137,7 +140,7 @@ body {
     transform-origin: bottom right;
 }
 
-#room-left{
+#room-left {
     height: 50%;
     width: 50%;
     background-color: #bebebe;
@@ -148,7 +151,7 @@ body {
 }
 
 
-#room-bottom{
+#room-bottom {
     /* Copy and use this as the small one*/
     height: 50%;
     width: 50%;
@@ -159,15 +162,15 @@ body {
     transform-origin: bottom right;
 }
 
-@media(max-width: 800px){
+@media(max-width: 800px) {
     #main-content {
         flex-direction: column-reverse;
     }
 
     #player-sidebar {
-        height: 35%;
+        height: 40;
         width: 100%;
-        padding-bottom: 15px; 
+        padding-bottom: 15px;
     }
 
     #input-container {
@@ -188,7 +191,7 @@ body {
     }
 
     .furn-container {
-        height: 90%;
+        height: 78%;
         margin-left: 1%;
         display: flex;
         justify-content: center;
@@ -212,6 +215,6 @@ body {
         overflow-x: scroll;
         padding-bottom: 10px;
     }
-} 
+}
 
 /* input styling creds: https://stackoverflow.com/questions/63179896/displaying-an-image-in-search-bar-html*/
