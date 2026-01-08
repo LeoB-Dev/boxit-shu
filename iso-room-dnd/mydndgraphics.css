@@ -1,17 +1,23 @@
 body {
     height: 100dvh;
-    overflow: hidden;
     margin: 0;
-    align-items: center;
-    padding: 0;
-    background-color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#nav {
+    width: 100%;
+    flex-shrink: 0;
+    /* Prevents the Nav from being squashed */
 }
 
 #main-content {
-    display: flex;
-    flex: 1;
     width: 100%;
-    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    /* Keeps the sidebar and room side-by-side on desktop */
+    overflow: hidden;
 }
 
 #player-sidebar {
@@ -165,18 +171,23 @@ body {
 @media(max-width: 800px) {
     #main-content {
         flex-direction: column-reverse;
+        height: 100dvh;
+        /* The "magic" unit for mobile */
+        width: 100vw;
+        overflow: hidden;
+        /* Prevents the whole page from scrolling */
     }
 
     #player-sidebar {
-        height: 40%;
+        height: 30%;
         width: 100%;
-        padding-bottom: 15px;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+        /* Adds 15px PLUS whatever space the iPhone needs for the bottom bar */
     }
 
     #input-container {
-        width: 120px;
-        align-self: start;
-        margin-left: 5px;
+        width: 97%;
+        align-self: center;
     }
 
     #bed-container {
@@ -184,10 +195,10 @@ body {
     }
 
     #search-bar {
-        width: 120px;
         height: 20px;
         margin-top: 10px;
         margin-bottom: 10px;
+        margin-left: 0;
     }
 
     .furn-container {
@@ -208,12 +219,16 @@ body {
 
     .scroll-menu {
         flex-direction: row;
-        height: 70%;
+        height: 100%;
         width: 100%;
         align-items: center;
         overflow-y: visible;
         overflow-x: scroll;
         padding-bottom: 10px;
+    }
+
+    .furn-container:first-child {
+        margin-left: 1.7%;
     }
 }
 
