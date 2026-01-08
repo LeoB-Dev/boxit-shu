@@ -1,23 +1,23 @@
-$.get("../navbar.html", function(data){
+$.get("../navbar.html", function (data) {
     $("#nav").replaceWith(data);
 });
 
-function windowWallPos (e) {
+function windowWallPos(e) {
     e.style.left = "35%";
     e.style.top = "20%";
 }
 
-function artWallPos (e) {
+function artWallPos(e) {
     e.style.left = "30%";
     e.style.top = "17%";
 }
 
-function tvWallPos (e) {
+function tvWallPos(e) {
     e.style.left = "30%";
     e.style.top = "20%";
 }
 
-function roomLeftDropNScale (e) {
+function roomLeftDropNScale(e) {
     e.classList.add('dropped');
     console.log('child element appended to left dropzone');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(30deg);");
@@ -25,7 +25,7 @@ function roomLeftDropNScale (e) {
     e.style.position = "fixed";
 }
 
-function roomRightDropNScale (e) {
+function roomRightDropNScale(e) {
     e.classList.add('dropped');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-90deg);");
     console.log('child element appended to right dropzone');
@@ -33,7 +33,7 @@ function roomRightDropNScale (e) {
     e.style.position = "fixed";
 }
 
-function roomBottomDropNScale (e) {
+function roomBottomDropNScale(e) {
     e.classList.add('dropped');
     e.setAttribute("style", "transform: scaleY(1.157) skew(30deg) rotate(-210deg);");  // 1 / 0.864, you need to divide by 0.864 which is the same as multipling by 1 / 0.864
     e.style.position = "fixed";
@@ -47,11 +47,11 @@ function saveState() {
     localStorage.setItem('dragPositions', JSON.stringify(positions));
 }
 
-function rejectWrongSide(){
+function rejectWrongSide() {
     // if class = LeftRIghtDeny 
-        // don't allow onto left or right
-        // else if class = bottomdeny
-            // don't allow onto bottom
+    // don't allow onto left or right
+    // else if class = bottomdeny
+    // don't allow onto bottom
 }
 
 function addIsoStyles(dropZone, droppedElement) {
@@ -70,15 +70,15 @@ function addIsoStyles(dropZone, droppedElement) {
         droppedElement.style.top = "50%";
         saveState();
     }
-    
+
     else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-desk") {
         console.log('child element appended to bottom dropdropZone');
         roomBottomDropNScale(droppedElement);
-        droppedElement.style.left = "50%"; 
+        droppedElement.style.left = "50%";
         droppedElement.style.top = "32%";
         saveState();
     }
-    
+
     else if (dropZone.id === "room-bottom" && droppedElement.id === "iso-chair") {
         console.log('child element appended to bottom dropdropZone');
         roomBottomDropNScale(droppedElement);
@@ -101,20 +101,20 @@ function addIsoStyles(dropZone, droppedElement) {
             roomLeftDropNScale(droppedElement);
             artWallPos(droppedElement);
             saveState();
-        } 
-        
-        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-window"){
+        }
+
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-window") {
             roomLeftDropNScale(droppedElement);
             windowWallPos(droppedElement);
             saveState();
         }
-        
-        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-tv"){
+
+        else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-tv") {
             roomLeftDropNScale(droppedElement);
             tvWallPos(droppedElement);
             saveState();
         }
-        
+
         else {
             roomLeftDropNScale(droppedElement);
             saveState();
@@ -126,21 +126,21 @@ function addIsoStyles(dropZone, droppedElement) {
             roomRightDropNScale(droppedElement);
             windowWallPos(droppedElement);
             saveState();
-        } 
-        
+        }
+
         else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-art") {
             roomRightDropNScale(droppedElement);
             artWallPos(droppedElement);
             saveState();
         }
-        
+
         else if (droppedElement.classList.contains("bottom-deny") && droppedElement.id === "iso-tv") {
             roomRightDropNScale(droppedElement);
             tvWallPos(droppedElement);
             saveState();
         }
-        
-        else if (droppedElement.classList.contains("leftright-deny")){
+
+        else if (droppedElement.classList.contains("leftright-deny")) {
             console.log('leftright-deny initiated');
             // dropZone.classList.remove("dragging");
             saveState();
@@ -159,7 +159,7 @@ function addIsoStyles(dropZone, droppedElement) {
 const dropZones = document.getElementsByClassName("dropzone");
 let draggedElement = null; // declare var in outer scope
 
-document.body.addEventListener("dragstart", (e) => {
+document.body.addEventListener("pointerdown", (e) => {
     if (e.target.classList.contains("furniture")) {
         draggedElement = e.target; // update var (e.target can be used for both zone and draggedElement)
         e.target.classList.add("dragging");
@@ -169,14 +169,37 @@ document.body.addEventListener("dragstart", (e) => {
 
 for (const zone of dropZones) {
     zone.addEventListener("dragover", (e) => {
-        if (draggedElement.classList.contains("bottom-deny") && (zone.id === "room-right" || zone.id === "room-left" || zone.classList.contains("furn-container"))){
-            e.preventDefault(); 
+        if (draggedElement.classList.contains("bottom-deny") && (zone.id === "room-right" || zone.id === "room-left" || zone.classList.contains("furn-container"))) {
+            e.preventDefault();
             zone.classList.add("drag-over");
         } else if (draggedElement.classList.contains("leftright-deny") && (zone.id === "room-bottom" || zone.classList.contains("furn-container"))) {
-            e.preventDefault(); 
+            e.preventDefault();
             zone.classList.add("drag-over");
-        } 
+        }
     });
+
+    // add mobile compatibility for touchmovehere
+    // zone.addEventListener("touchmove", (e) => {
+    //     if (draggedElement.classList.contains("bottom-deny") && (zone.id === "room-right" || zone.id === "room-left" || zone.classList.contains("furn-container"))) {
+
+    //         e.preventDefault();
+    //         const touch = e.touches[0];
+    //         const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+    //         if (elementUnderFinger && elementUnderFinger.classList.contains("zone")) {
+    //             elementUnderFinger.classList.add("drag-over");
+    //         }
+
+    //     } else if (draggedElement.classList.contains("leftright-deny") && (zone.id === "room-bottom" || zone.classList.contains("furn-container"))) {
+
+    //         e.preventDefault();
+    //         const touch = e.touches[0];
+    //         const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+    //         if (elementUnderFinger && elementUnderFinger.classList.contains("zone")) {
+    //             elementUnderFinger.classList.add("drag-over");
+    //         }
+
+    //     }
+    // }, { passive: false });
 
     zone.addEventListener("dragleave", () => {
         zone.classList.remove("drag-over");
@@ -188,14 +211,14 @@ for (const zone of dropZones) {
         zone.classList.remove("drag-over");
         console.log('removed drag-over');
         const draggedElement = document.querySelector(".dragging");
-       
+
 
         if (draggedElement) {
             zone.appendChild(draggedElement);
             console.log(draggedElement);
             addIsoStyles(zone, draggedElement);
-            }
-        });
+        }
+    });
 }
 
 window.addEventListener('load', () => {
@@ -217,23 +240,23 @@ document.body.addEventListener("dragend", (e) => {
     }
 });
 
-// document.body.addEventListener("touchstart", (e) => {
-//     if (e.target.classList.contains("furniture")) {
-//         e.target.classList.add("dragging");
-//         console.log("dragging started");
-//     }
-// });
+document.body.addEventListener("touchstart", (e) => {
+    if (e.target.classList.contains("furniture")) {
+        e.target.classList.add("dragging");
+        console.log("dragging started");
+    }
+});
 
-// document.body.addEventListener("touchend", (e) => {
-//     if (e.target.classList.contains("furniture")) {
-//         e.target.classList.remove("dragging");
-//         console.log("dragging ended");
-//     }
-// });
+document.body.addEventListener("touchend", (e) => {
+    if (e.target.classList.contains("furniture")) {
+        e.target.classList.remove("dragging");
+        console.log("dragging ended");
+    }
+});
 
 
 
-function showSidebar(){
+function showSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.style.display = 'flex';
 
@@ -243,10 +266,10 @@ function showSidebar(){
     }
 }
 
-function hideSidebar(){
+function hideSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.style.display = 'none';
-    
+
     const mainNavItems = document.querySelectorAll('.hideOnMobile');
     for (const navItem of mainNavItems) {
         navItem.style.display = 'flex';
