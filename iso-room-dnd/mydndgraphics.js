@@ -217,19 +217,19 @@ document.body.addEventListener("dragend", (e) => {
     }
 });
 
-document.body.addEventListener("touchstart", (e) => {
-    if (e.target.classList.contains("furniture")) {
-        e.target.classList.add("dragging");
-        console.log("dragging started");
-    }
-});
+// document.body.addEventListener("touchstart", (e) => {
+//     if (e.target.classList.contains("furniture")) {
+//         e.target.classList.add("dragging");
+//         console.log("dragging started");
+//     }
+// });
 
-document.body.addEventListener("touchend", (e) => {
-    if (e.target.classList.contains("furniture")) {
-        e.target.classList.remove("dragging");
-        console.log("dragging ended");
-    }
-});
+// document.body.addEventListener("touchend", (e) => {
+//     if (e.target.classList.contains("furniture")) {
+//         e.target.classList.remove("dragging");
+//         console.log("dragging ended");
+//     }
+// });
 
 
 
