@@ -30,21 +30,20 @@
             width: auto;
             position: relative;
             cursor: grab;
-            /* CHANGE 1: Added user-select: none to prevent text/image selection during drag */
+            /* prevent text/image selection during drag */
             user-select: none;
-            /* CHANGE 2: Added pointer-events to ensure the image itself captures pointer events */
+            /* ensure the image itself captures pointer events */
             pointer-events: auto;
-            /* CHANGE 3: Prevent default browser image drag behavior */
-            /* These are vendor-prefixed properties (webkit for Chrome/Safari, moz for Firefox) */
+            /* Prevent default browser image drag behavior */
             -webkit-user-drag: none;
             -moz-user-drag: none;
-            /* CHANGE 4: CRITICAL FOR MOBILE - prevents default touch behaviors like scrolling/zooming */
-            /* This tells the browser not to handle touch events, letting our pointer events work */
+            /* CRITICAL FOR MOBILE - prevents default touch behaviors like scrolling/zooming, tells the browser not to handle touch events, letting our pointer events work */
             touch-action: none;
             z-index: 1;
         }
 
         .draggable:before {
+            /* What is this block for? - pseudo-element to provide normal div behaviour to img */
             content: "";
             display: block;
         }
@@ -67,7 +66,7 @@
         .draggable.is-dragging:before {
             box-shadow: 0 20px 45px rgba(47, 63, 182, 0.45);
             transform: scale(0.9);
-            /* Slightly shrinks the visual element when dragging */
+            /* Slightly shrinks the visual element when dragging - may not be needed for now*/
         }
 
         /* On iOS, transitions during drag feel a bit weird and uncomfortable. */
@@ -90,7 +89,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* filter: brightness(1.5) invert(1) opacity(0.6); */
             z-index: 0;
         }
 
@@ -115,7 +113,6 @@
         }
 
         #room-bottom {
-            /* Copy and use this as the small one*/
             height: 300px;
             width: 300px;
             position: absolute;
@@ -142,7 +139,6 @@
     </div>
 
     <script>
-        // Get reference to the draggable element
         const target = document.querySelector('.draggable');
 
         // Prevent default dragstart event on the image
@@ -152,12 +148,12 @@
         });
 
         // These objects store x,y coordinates at different points in the drag lifecycle
-        const originPosition = { x: 0, y: 0 };   // Where element was when last drag ended
+        const originPosition = { x: 0, y: 0 };   // Where element was when last drag ended (why are all of these set to 0? - initialised to 0, will be changed when item is moved)
         const startPosition = { x: 0, y: 0 };    // Mouse/touch position when drag starts
         const currentPosition = { x: 0, y: 0 };  // Current mouse/touch position during drag
 
-        let isDragging = false;  // Tracks whether we're currently dragging
-        let rafId = null;        // Stores requestAnimationFrame ID for cancellation
+        let isDragging = false;
+        let rafId = null;        // Stores requestAnimationFrame ID for cancellation (What does this mean?)
 
         // Calculates the element's new position based on:
         // - Where it started (originPosition)
@@ -169,7 +165,7 @@
             };
         };
 
-        // Actually moves the element by updating its CSS transform
+        // Actually moves the element by updating its CSS transform (whole block needs more explanation)
         // Using translate3d triggers GPU acceleration for smoother animation
         const updatePosition = () => {
             const { x, y } = calculatePosition();
@@ -177,7 +173,7 @@
             rafId = null;  // Clear the animation frame ID after update
         };
 
-        // Schedules a position update on the next animation frame
+        // Schedules a position update on the next animation frame (whole block needs more explanation)
         // requestAnimationFrame syncs updates with browser repaints (~60fps)
         // This prevents multiple updates in a single frame for better performance
         const requestUpdate = () => {
@@ -186,27 +182,27 @@
             }
         };
 
-        // Called when user presses down on the element
+        // Called when user presses down on the element 
         const handlePointerDown = (e) => {
             // isPrimary ensures we only respond to one pointer (important for multi-touch)
-            if (!e.isPrimary || isDragging) {
+            if (!e.isPrimary || isDragging) { // explain
                 return;
             }
 
             isDragging = true;
 
             // Record starting position for pointer
-            startPosition.x = currentPosition.x = e.clientX;
+            startPosition.x = currentPosition.x = e.clientX; // why do we need this again?
             startPosition.y = currentPosition.y = e.clientY;
 
             // setPointerCapture ensures this element receives all pointer events
             // even if pointer moves outside element bounds
-            target.setPointerCapture(e.pointerId);
+            target.setPointerCapture(e.pointerId); // I don't get it
 
-            target.classList.add('is-dragging');  // Triggers visual feedback via CSS
+            target.classList.add('is-dragging');
 
             // Listen for pointer movement
-            target.addEventListener('pointermove', handlePointerMove, { passive: true });
+            target.addEventListener('pointermove', handlePointerMove, { passive: true }); // what is passive true here
         };
 
         // Called continuously as pointer moves during drag
@@ -219,7 +215,7 @@
             currentPosition.x = e.clientX;
             currentPosition.y = e.clientY;
 
-            // Schedule visual update
+            // Schedule visual update - explain this
             requestUpdate();
         };
 
@@ -231,18 +227,18 @@
 
             isDragging = false;
 
-            // Cancel any pending animation frame to prevent orphaned updates
+            // Cancel any pending animation frame to prevent orphaned updates- explain
             if (rafId) {
                 cancelAnimationFrame(rafId);
                 rafId = null;
             }
 
             // Save the final position as the new origin for next drag
-            const { x, y } = calculatePosition();
+            const { x, y } = calculatePosition(); // explain
             originPosition.x = x;
             originPosition.y = y;
 
-            target.classList.remove('is-dragging');  // Remove visual feedback
+            target.classList.remove('is-dragging');
 
             // Remove event listener to prevent memory leaks
             target.removeEventListener('pointermove', handlePointerMove);
@@ -256,7 +252,7 @@
         // Set up event listeners
         // passive: true tells browser these handlers won't call preventDefault()
         // which allows browser to optimize performance
-        target.addEventListener('pointerdown', handlePointerDown, { passive: true });
+        target.addEventListener('pointerdown', handlePointerDown, { passive: true }); // what is passive true
         target.addEventListener('pointerup', release);
         target.addEventListener('pointercancel', release);  // Handles interruptions (like phone calls)
         target.addEventListener('lostpointercapture', cleanup);  // Cleanup when capture is lost
