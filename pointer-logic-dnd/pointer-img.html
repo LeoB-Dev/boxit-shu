@@ -1,8 +1,148 @@
-$.get("../navbar.html", function (data) {
-    $("#nav").replaceWith(data);
-});
+<!DOCTYPE html>
+<html lang="en">
 
-// Get reference to the draggable element
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Element</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .stage {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        #sidebar {
+            background-color: grey;
+            height: 100%;
+        }
+
+        .draggable {
+            height: 200px;
+            width: auto;
+            position: relative;
+            cursor: grab;
+            /* CHANGE 1: Added user-select: none to prevent text/image selection during drag */
+            user-select: none;
+            /* CHANGE 2: Added pointer-events to ensure the image itself captures pointer events */
+            pointer-events: auto;
+            /* CHANGE 3: Prevent default browser image drag behavior */
+            /* These are vendor-prefixed properties (webkit for Chrome/Safari, moz for Firefox) */
+            -webkit-user-drag: none;
+            -moz-user-drag: none;
+            /* CHANGE 4: CRITICAL FOR MOBILE - prevents default touch behaviors like scrolling/zooming */
+            /* This tells the browser not to handle touch events, letting our pointer events work */
+            touch-action: none;
+            z-index: 1;
+        }
+
+        .draggable:before {
+            content: "";
+            display: block;
+        }
+
+        /* Expand the interactive area for easier grabbing */
+        .draggable:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* Shorthand for top: 0, right: 0, bottom: 0, left: 0 */
+            display: block;
+        }
+
+        .draggable.is-dragging {
+            cursor: grabbing;
+            will-change: transform;
+            /* Hints to browser to optimize transform animations */
+        }
+
+        .draggable.is-dragging:before {
+            box-shadow: 0 20px 45px rgba(47, 63, 182, 0.45);
+            transform: scale(0.9);
+            /* Slightly shrinks the visual element when dragging */
+        }
+
+        /* On iOS, transitions during drag feel a bit weird and uncomfortable. */
+        @supports (-webkit-touch-callout: none) {
+            .draggable {
+                transition: 0s;
+            }
+        }
+
+        .central-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room-container {
+            height: 600px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* filter: brightness(1.5) invert(1) opacity(0.6); */
+            z-index: 0;
+        }
+
+        #room-right {
+            height: 300px;
+            width: 300px;
+            background-color: #d3d3d3;
+            position: absolute;
+            bottom: 300px;
+            transform: rotate(90deg) skewX(-30deg) scaleY(0.864);
+            transform-origin: bottom right;
+        }
+
+        #room-left {
+            height: 300px;
+            width: 300px;
+            background-color: #bebebe;
+            position: absolute;
+            bottom: 300px;
+            transform: rotate(-30deg) skewX(-30deg) scaleY(0.864);
+            transform-origin: bottom right;
+        }
+
+        #room-bottom {
+            /* Copy and use this as the small one*/
+            height: 300px;
+            width: 300px;
+            position: absolute;
+            background-color: #54513f;
+            bottom: 300px;
+            transform: rotate(210deg) skew(-30deg) scaleY(0.864);
+            transform-origin: bottom right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stage">
+        <div id="sidebar">
+            <img class="draggable" src="../iso-room-dnd/bed.png">
+        </div>
+        <div id="central-content">
+            <div class="room-container">
+                <div class="dropzone" id="room-right"></div>
+                <div class="dropzone" id="room-left"></div>
+                <div class="dropzone" id="room-bottom"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get reference to the draggable element
         const target = document.querySelector('.draggable');
 
         // Prevent default dragstart event on the image
@@ -120,3 +260,9 @@ $.get("../navbar.html", function (data) {
         target.addEventListener('pointerup', release);
         target.addEventListener('pointercancel', release);  // Handles interruptions (like phone calls)
         target.addEventListener('lostpointercapture', cleanup);  // Cleanup when capture is lost
+    </script>
+</body>
+
+</html>
+
+<!--code based on: https://dev.to/nishinoshake/smooth-drag-interactions-with-pointer-events-5e2j?utm_source=chatgpt.com-->

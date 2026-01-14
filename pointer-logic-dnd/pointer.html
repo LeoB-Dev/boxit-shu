@@ -1,15 +1,90 @@
-$.get("../navbar.html", function (data) {
-    $("#nav").replaceWith(data);
-});
+<!DOCTYPE html>
+<html lang="en">
 
-// Get reference to the draggable element
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Element</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* Prevent any scrolling on the page */
+            overflow: hidden;
+        }
+
+        .stage {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+            box-shadow: inset 0 15px 40px rgba(56, 189, 248, 0.2);
+        }
+
+        .draggable {
+            position: relative;
+            width: 72px;
+            aspect-ratio: 1 / 1;
+            /* Makes height equal to width (creates a square) */
+            touch-action: none;
+            /* Prevents default touch behaviors like scrolling when touching this element */
+            cursor: grab;
+            transition: transform 120ms ease-out;
+        }
+
+        .draggable:before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #5e6cf3 0%, #c0c6ff 100%);
+            box-shadow: 0 15px 35px rgba(65, 79, 195, 0.35);
+            transition: box-shadow 200ms ease-out, transform 200ms ease-out;
+        }
+
+        /* Expand the interactive area for easier grabbing */
+        .draggable:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* Shorthand for top: 0, right: 0, bottom: 0, left: 0 */
+            display: block;
+            transform: scale(1.2);
+            /* Makes clickable area 20% larger than visible element */
+        }
+
+        .draggable.is-dragging {
+            cursor: grabbing;
+            will-change: transform;
+            /* Hints to browser to optimize transform animations */
+        }
+
+        .draggable.is-dragging:before {
+            box-shadow: 0 20px 45px rgba(47, 63, 182, 0.45);
+            transform: scale(0.9);
+            /* Slightly shrinks the visual element when dragging */
+        }
+
+        /* On iOS, transitions during drag feel a bit weird and uncomfortable. */
+        @supports (-webkit-touch-callout: none) {
+            .draggable {
+                transition: 0s;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stage">
+        <div class="draggable"></div>
+    </div>
+
+    <script>
+        // Get reference to the draggable element
         const target = document.querySelector('.draggable');
-
-        // Prevent default dragstart event on the image
-        // This stops the browser's native image drag behavior
-        target.addEventListener('dragstart', (e) => {
-            e.preventDefault();
-        });
 
         // These objects store x,y coordinates at different points in the drag lifecycle
         const originPosition = { x: 0, y: 0 };   // Where element was when last drag ended
@@ -120,3 +195,7 @@ $.get("../navbar.html", function (data) {
         target.addEventListener('pointerup', release);
         target.addEventListener('pointercancel', release);  // Handles interruptions (like phone calls)
         target.addEventListener('lostpointercapture', cleanup);  // Cleanup when capture is lost
+    </script>
+</body>
+
+</html>

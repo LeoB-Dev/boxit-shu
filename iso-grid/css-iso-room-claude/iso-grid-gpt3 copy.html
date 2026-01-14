@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Isometric Editor - Global Drag</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-sidebar: #1e293b;
+            --border: #334155;
+            --text: #f8fafc;
+            --accent: #3b82f6;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-main);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            font-family: system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        #sidebar {
+            width: 220px;
+            background: var(--bg-sidebar);
+            border-right: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .palette-item {
+            background: #334155;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+            border: 2px solid transparent;
+        }
+
+        .palette-item:active {
+            cursor: grabbing;
+        }
+
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        #viewport {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        svg {
+            background: #020617;
+            border: 2px solid var(--border);
+            touch-action: none;
+        }
+
+        /* The "Global Ghost" that follows the mouse everywhere */
+        #global-ghost {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            opacity: 0.8;
+            transform: translate(-50%, -50%);
+        }
+
+        .tile {
+            stroke: #334155;
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .item {
+            stroke: #020617;
+            stroke-width: 2;
+        }
+
+        .preview {
+            stroke-dasharray: 4 4;
+            fill-opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .ghost-svg {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="global-ghost"></div>
+
+    <aside id="sidebar">
+        <h3 style="margin-top:0">Editor Blocks</h3>
+        <div id="palette-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </aside>
+
+    <main id="viewport">
+        <svg id="svg" width="800" height="600"></svg>
+    </main>
+
+    <script>
+        const TILE_WIDTH = 64;
+        const TILE_HEIGHT = 32;
+        const GRID_SIZE = 10;
+        const GRID_ORIGIN = { x: 400, y: 150 };
+
+        const svg = document.getElementById("svg");
+        const globalGhost = document.getElementById("global-ghost");
+        const paletteList = document.getElementById("palette-list");
+
+        let placedItems = [];
+        let drag = null;
+        let svgGhost = null;
+        let preview = null;
+
+        const palette = [
+            { id: 1, w: 1, h: 1, color: "#3b82f6", name: "1x1 Cube" },
+            { id: 2, w: 2, h: 1, color: "#ef4444", name: "2x1 Plank" },
+            { id: 3, w: 1, h: 2, color: "#10b981", name: "1x2 Plank" }
+        ];
+
+        /* --- MATH --- */
+        function isoToScreen(x, y, origin) {
+            return { x: (x - y) * (TILE_WIDTH / 2) + origin.x, y: (x + y) * (TILE_HEIGHT / 2) + origin.y };
+        }
+        function screenToIso(px, py, origin) {
+            px -= origin.x; py -= origin.y;
+            return {
+                x: (px / (TILE_WIDTH / 2) + py / (TILE_HEIGHT / 2)) / 2,
+                y: (py / (TILE_HEIGHT / 2) - px / (TILE_WIDTH / 2)) / 2
+            };
+        }
+        function buildPath(x, y, w, h, origin) {
+            const a = isoToScreen(x, y, origin), b = isoToScreen(x + w, y, origin),
+                c = isoToScreen(x + w, y + h, origin), d = isoToScreen(x, y + h, origin);
+            return `${a.x},${a.y} ${b.x},${b.y} ${c.x},${c.y} ${d.x},${d.y}`;
+        }
+
+        /* --- SETUP --- */
+        for (let y = 0; y < GRID_SIZE; y++) {
+            for (let x = 0; x < GRID_SIZE; x++) {
+                const p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                p.setAttribute("class", "tile");
+                p.setAttribute("points", buildPath(x, y, 1, 1, GRID_ORIGIN));
+                svg.appendChild(p);
+            }
+        }
+
+        palette.forEach(item => {
+            const el = document.createElement("div");
+            el.className = "palette-item";
+            el.innerHTML = `<div class="color-preview" style="background:${item.color}"></div><span>${item.name}</span>`;
+            el.onpointerdown = (e) => startGlobalDrag(e, item);
+            paletteList.appendChild(el);
+        });
+
+        /* --- DRAG LOGIC --- */
+        function startGlobalDrag(e, item) {
+            drag = { item, valid: false, pos: { x: 0, y: 0 } };
+
+            // Setup HTML Ghost
+            globalGhost.style.display = "block";
+            globalGhost.style.background = item.color;
+            globalGhost.style.left = e.clientX + "px";
+            globalGhost.style.top = e.clientY + "px";
+
+            // Setup SVG visuals (hidden initially)
+            svgGhost = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            svgGhost.setAttribute("class", "item ghost-svg");
+            svgGhost.setAttribute("fill", item.color);
+            svgGhost.style.display = "none";
+            svg.appendChild(svgGhost);
+
+            preview = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            preview.setAttribute("class", "item preview");
+            preview.setAttribute("fill", item.color);
+            preview.style.display = "none";
+            svg.appendChild(preview);
+
+            window.addEventListener("pointermove", onPointerMove);
+            window.addEventListener("pointerup", onPointerUp);
+        }
+
+        function onPointerMove(e) {
+            if (!drag) return;
+
+            // Move HTML Ghost
+            globalGhost.style.left = e.clientX + "px";
+            globalGhost.style.top = e.clientY + "px";
+
+            const rect = svg.getBoundingClientRect();
+            const isOverSVG = (
+                e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom
+            );
+
+            if (isOverSVG) {
+                globalGhost.style.opacity = "0"; // Hide HTML ghost while over grid
+                svgGhost.style.display = "block";
+
+                const mx = e.clientX - rect.left;
+                const my = e.clientY - rect.top;
+                const iso = screenToIso(mx, my, GRID_ORIGIN);
+
+                // Update SVG Ghost (Centered on mouse)
+                svgGhost.setAttribute("points", buildPath(iso.x - drag.item.w / 2, iso.y - drag.item.h / 2, drag.item.w, drag.item.h, GRID_ORIGIN));
+
+                // Snap logic
+                const sx = Math.round(iso.x - drag.item.w / 2);
+                const sy = Math.round(iso.y - drag.item.h / 2);
+
+                if (sx >= 0 && sy >= 0 && sx <= GRID_SIZE - drag.item.w && sy <= GRID_SIZE - drag.item.h) {
+                    preview.setAttribute("points", buildPath(sx, sy, drag.item.w, drag.item.h, GRID_ORIGIN));
+                    preview.style.display = "block";
+                    drag.valid = true;
+                    drag.pos = { x: sx, y: sy };
+                } else {
+                    preview.style.display = "none";
+                    drag.valid = false;
+                }
+            } else {
+                globalGhost.style.opacity = "0.8"; // Show HTML ghost when outside
+                svgGhost.style.display = "none";
+                preview.style.display = "none";
+                drag.valid = false;
+            }
+        }
+
+        function onPointerUp() {
+            if (!drag) return;
+
+            if (drag.valid) {
+                placedItems.push({ ...drag.item, x: drag.pos.x, y: drag.pos.y });
+                render();
+            }
+
+            globalGhost.style.display = "none";
+            svgGhost.remove();
+            preview.remove();
+            drag = null;
+
+            window.removeEventListener("pointermove", onPointerMove);
+            window.removeEventListener("pointerup", onPointerUp);
+        }
+
+        function render() {
+            document.querySelectorAll(".placed").forEach(el => el.remove());
+            // Sort items by X+Y so back items are drawn first (simple depth sorting)
+            placedItems.sort((a, b) => (a.x + a.y) - (b.x + b.y));
+
+            placedItems.forEach(it => {
+                const p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                p.setAttribute("class", "item placed");
+                p.setAttribute("fill", it.color);
+                p.setAttribute("points", buildPath(it.x, it.y, it.w, it.h, GRID_ORIGIN));
+                svg.appendChild(p);
+            });
+        }
+    </script>
+</body>
+
+</html>

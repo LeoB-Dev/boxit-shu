@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Isometric Drag (Documented)</title>
+
+    <style>
+        /* Center the SVG stage on a dark background */
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #0f172a
+        }
+
+        /* The SVG drawing surface */
+        svg {
+            background: #020617;
+            border: 2px solid #334155;
+            touch-action: none;
+            /* Disables mobile scrolling during drag */
+        }
+
+        /* Style for grid tiles */
+        .tile {
+            stroke: #334155;
+            fill: none;
+            stroke-width: 2
+        }
+
+        /* Style for placed items */
+        .item {
+            stroke: #020617;
+            stroke-width: 2;
+            cursor: grab
+        }
+
+        /* Semi-transparent floating item while dragging */
+        .ghost {
+            opacity: .75;
+            pointer-events: none
+        }
+
+        /* Dashed placement preview */
+        .preview {
+            stroke-dasharray: 6 6;
+            fill-opacity: .35;
+            pointer-events: none
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG acts as our "game canvas" -->
+    <svg id="s" width="800" height="600"></svg>
+
+    <script>
+
+        /* ============================================================
+           CONSTANTS (game configuration)
+           ============================================================ */
+
+        /* Tile pixel size for isometric projection */
+        const W = 64, H = 32
+
+        /* Grid dimensions (8x8 tiles) */
+        const G = 8
+
+        /* Origin point of the main grid in screen space */
+        const GO = { x: 400, y: 120 }
+
+        /* Origin point of the tray area */
+        const TO = { x: 400, y: 440 }
+
+        /* Reference to the SVG element */
+        const svg = s
+
+
+        /* ============================================================
+           GAME STATE
+           ============================================================ */
+
+        /*
+        Each item has:
+        id  -> unique identifier
+        x,y -> grid position
+        w,h -> size in tiles
+        c   -> color
+        t   -> 1 = in tray, 0 = on grid
+        */
+        let items = [
+            { id: 1, x: 0, y: 0, w: 1, h: 1, c: "#3b82f6", t: 1 },
+            { id: 2, x: 2, y: 0, w: 2, h: 1, c: "#ef4444", t: 1 },
+            { id: 3, x: 4, y: 0, w: 1, h: 2, c: "#10b981", t: 1 }
+        ]
+
+        /* Active drag state */
+        let drag = null
+
+        /* Floating translucent version of dragged item */
+        let ghost
+
+        /* Dashed snapping preview */
+        let preview
+
+
+        /* ============================================================
+           ISOMETRIC MATH
+           ============================================================ */
+
+        /*
+        Convert grid coordinates → screen pixels
+        This creates the diamond layout
+        */
+        const iso = (x, y, o) => ({
+            x: (x - y) * W / 2 + o.x,
+            y: (x + y) * H / 2 + o.y
+        })
+
+        /*
+        Convert screen pixels → grid coordinates
+        This is the inverse of iso()
+        */
+        const inv = (x, y, o) => ({
+            x: ((x - o.x) / (W / 2) + (y - o.y) / (H / 2)) / 2,
+            y: ((y - o.y) / (H / 2) - (x - o.x) / (W / 2)) / 2
+        })
+
+        /*
+        Round and clamp an item so it fits inside the grid
+        */
+        const snap = (p, i) => ({
+            x: Math.max(0, Math.min(G - i.w, Math.round(p.x - i.w / 2))),
+            y: Math.max(0, Math.min(G - i.h, Math.round(p.y - i.h / 2)))
+        })
+
+        /*
+        Check if a screen pixel position is inside the grid
+        */
+        const inside = (x, y) => {
+            const p = inv(x, y, GO)
+            return p.x >= 0 && p.y >= 0 && p.x <= G && p.y <= G
+        }
+
+
+        /* ============================================================
+           SVG HELPERS
+           ============================================================ */
+
+        /*
+        Build the 4-corner diamond polygon for an isometric rectangle
+        */
+        const poly = (x, y, w, h, o) => {
+            const a = iso(x, y, o)
+            const b = iso(x + w, y, o)
+            const c = iso(x + w, y + h, o)
+            const d = iso(x, y + h, o)
+            return `${a.x},${a.y} ${b.x},${b.y} ${c.x},${c.y} ${d.x},${d.y}`
+        }
+
+        /*
+        Create and append an SVG polygon
+        */
+        const make = (cls, fill) => {
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "polygon")
+            p.setAttribute("class", cls)
+            if (fill) p.setAttribute("fill", fill)
+            svg.appendChild(p)
+            return p
+        }
+
+
+        /* ============================================================
+           DRAW GRID
+           ============================================================ */
+
+        /* Main grid */
+        for (let y = 0; y < G; y++)
+            for (let x = 0; x < G; x++)
+                make("tile").setAttribute("points", poly(x, y, 1, 1, GO))
+
+        /* Tray tiles */
+        for (let i = 0; i < 6; i++)
+            make("tile").setAttribute("points", poly(i, 0, 1, 1, TO))
+
+
+        /* ============================================================
+           DRAW ITEMS
+           ============================================================ */
+
+        function draw() {
+            /* Remove all old item polygons */
+            document.querySelectorAll(".item").forEach(e => e.remove())
+
+            /* Draw every item */
+            items.forEach(it => {
+                if (drag && drag.it.id === it.id) return
+
+                const o = it.t ? TO : GO
+                const p = make("item", it.c)
+                p.setAttribute("points", poly(it.x, it.y, it.w, it.h, o))
+
+                /* Start dragging when pointer presses */
+                p.onpointerdown = e => start(e, it)
+            })
+        }
+
+        draw()
+
+
+        /* ============================================================
+           DRAGGING SYSTEM
+           ============================================================ */
+
+        function start(e, it) {
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            const o = it.t ? TO : GO
+            const tl = iso(it.x, it.y, o)
+
+            /* Store mouse-to-item offset so dragging is smooth */
+            drag = { it, dx: mx - tl.x, dy: my - tl.y }
+
+            ghost = make("item ghost", it.c)
+            preview = make("item preview", it.c)
+
+            svg.setPointerCapture(e.pointerId)
+            move(e)
+        }
+
+        function move(e) {
+            if (!drag) return
+
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            /* Where the top-left of the dragged item should be */
+            const px = mx - drag.dx
+            const py = my - drag.dy
+
+            const o = drag.it.t ? TO : GO
+            const pos = inv(px, py, o)
+
+            /* Update floating ghost */
+            ghost.setAttribute("points", poly(pos.x, pos.y, drag.it.w, drag.it.h, o))
+
+            /* Update snap preview */
+            if (inside(mx, my)) {
+                const p = snap(inv(mx, my, GO), drag.it)
+                preview.setAttribute("points", poly(p.x, p.y, drag.it.w, drag.it.h, GO))
+                preview.style.display = "block"
+            } else preview.style.display = "none"
+        }
+
+        function end(e) {
+            if (!drag) return
+
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            /* Apply snapping when released */
+            if (inside(mx, my)) {
+                const p = snap(inv(mx, my, GO), drag.it)
+                drag.it.x = p.x
+                drag.it.y = p.y
+                drag.it.t = 0
+            }
+
+            ghost.remove()
+            preview.remove()
+            drag = null
+            draw()
+        }
+
+
+        /* ============================================================
+           POINTER EVENTS (mobile + mouse)
+           ============================================================ */
+
+        svg.onpointermove = move
+        svg.onpointerup = e => { svg.releasePointerCapture(e.pointerId); end(e) }
+        svg.onpointercancel = e => { svg.releasePointerCapture(e.pointerId); end(e) }
+
+    </script>
+</body>
+
+</html>

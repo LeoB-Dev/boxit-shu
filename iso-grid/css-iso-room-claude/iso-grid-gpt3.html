@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Isometric Editor (Learning Version)</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Main SVG editor */
+        svg {
+            background: #020617;
+            border: 2px solid #334155;
+            touch-action: none;
+            /* required for mobile dragging */
+        }
+
+        /* Grid tiles */
+        .tile {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Actual placed objects */
+        .item {
+            stroke: #020617;
+            stroke-width: 2;
+        }
+
+        /* Floating object while dragging */
+        .ghost {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* Snapped placement preview */
+        .preview {
+            stroke-dasharray: 6 6;
+            fill-opacity: 0.35;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <svg id="svg" width="900" height="600"></svg>
+
+    <script>
+        /* ============================================================
+           SECTION 1 — BASIC CONSTANTS :)
+           These control how the isometric world is built
+           ============================================================ */
+
+        const TILE_WIDTH = 64   // width of one isometric tile
+        const TILE_HEIGHT = 32   // height of one isometric tile (1/2)
+        const GRID_SIZE = 8    // 8×8 grid
+
+        // where the isometric grid starts on screen
+        const GRID_ORIGIN = { x: 450, y: 100 }
+
+        // where the palette items sit (left side)
+        const PALETTE_ORIGIN = { x: 150, y: 420 }
+
+        const svg = document.getElementById("svg")
+
+
+        /* ============================================================
+           SECTION 2 — DATA MODELS :) 1Q
+           ============================================================ */
+
+        // items already placed on the grid
+        let placedItems = []
+
+        // the three template blocks in the palette
+        let palette = [
+            { id: 1, w: 1, h: 1, color: "#3b82f6", x: 0, y: 0 }, /* What does id mean here?*/
+            { id: 2, w: 2, h: 1, color: "#ef4444", x: 2, y: 0 },
+            { id: 3, w: 1, h: 2, color: "#10b981", x: 5, y: 0 }
+        ]
+
+        // current drag operation
+        let drag = null
+        let ghost = null
+        let preview = null
+
+
+        /* ============================================================
+           SECTION 3 — ISOMETRIC MATH
+           ============================================================ */
+
+        // convert isometric tile coordinates to screen pixels
+        function isoToScreen(x, y, origin) {
+            return {
+                x: (x - y) * (TILE_WIDTH / 2) + origin.x,
+                y: (x + y) * (TILE_HEIGHT / 2) + origin.y
+            }
+        }
+
+        // convert screen pixels back to isometric tile coordinates
+        function screenToIso(px, py, origin) {
+            px -= origin.x
+            py -= origin.y
+
+            return {
+                x: (px / (TILE_WIDTH / 2) + py / (TILE_HEIGHT / 2)) / 2,
+                y: (py / (TILE_HEIGHT / 2) - px / (TILE_WIDTH / 2)) / 2
+            }
+        }
+
+        // snap an item so it fits inside the grid
+        function snapToGrid(pos, item) {
+            return {
+                x: Math.max(0, Math.min(GRID_SIZE - item.w, Math.round(pos.x - item.w / 2))),
+                y: Math.max(0, Math.min(GRID_SIZE - item.h, Math.round(pos.y - item.h / 2)))
+            }
+        }
+
+        // test if a pixel position is over the grid
+        function isInsideGrid(px, py) {
+            const p = screenToIso(px, py, GRID_ORIGIN)
+            return p.x >= 0 && p.y >= 0 && p.x <= GRID_SIZE && p.y <= GRID_SIZE
+        }
+
+
+        /* ============================================================
+           SECTION 4 — SVG SHAPE HELPERS
+           ============================================================ */
+
+        // build the four corners of an isometric rectangle
+        function buildPolygon(x, y, w, h, origin) {
+            const a = isoToScreen(x, y, origin)
+            const b = isoToScreen(x + w, y, origin)
+            const c = isoToScreen(x + w, y + h, origin)
+            const d = isoToScreen(x, y + h, origin)
+
+            return `${a.x},${a.y} ${b.x},${b.y} ${c.x},${c.y} ${d.x},${d.y}`
+        }
+
+        // create a new SVG polygon
+        function makePolygon(cssClass, fill) {
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "polygon")
+            p.setAttribute("class", cssClass)
+            p.setAttribute("fill", fill)
+            svg.appendChild(p)
+            return p
+        }
+
+
+        /* ============================================================
+           SECTION 5 — DRAW GRID
+           ============================================================ */
+
+        for (let y = 0; y < GRID_SIZE; y++) {
+            for (let x = 0; x < GRID_SIZE; x++) {
+                const tile = makePolygon("tile", "none")
+                tile.setAttribute("points", buildPolygon(x, y, 1, 1, GRID_ORIGIN))
+            }
+        }
+
+
+        /* ============================================================
+           SECTION 6 — DRAW PALETTE ITEMS
+           ============================================================ */
+
+        function drawPalette() {
+            palette.forEach(item => {
+                const p = makePolygon("item", item.color)
+                p.setAttribute("points", buildPolygon(item.x, item.y, item.w, item.h, PALETTE_ORIGIN))
+
+                p.onpointerdown = e => {
+                    startDrag(e, item)
+                }
+            })
+        }
+
+        drawPalette()
+
+
+        /* ============================================================
+           SECTION 7 — DRAG LOGIC
+           ============================================================ */
+
+        function startDrag(e, item) {
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            drag = {
+                item: item,
+                offsetX: mx,
+                offsetY: my
+            }
+
+            ghost = makePolygon("item ghost", item.color)
+            preview = makePolygon("item preview", item.color)
+
+            svg.setPointerCapture(e.pointerId)
+        }
+
+        svg.onpointermove = e => {
+            if (!drag) return
+
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            const iso = screenToIso(mx, my, GRID_ORIGIN)
+
+            ghost.setAttribute("points",
+                buildPolygon(iso.x - drag.item.w / 2, iso.y - drag.item.h / 2, drag.item.w, drag.item.h, GRID_ORIGIN)
+            )
+
+            if (isInsideGrid(mx, my)) {
+                const p = snapToGrid(iso, drag.item)
+                preview.setAttribute("points", buildPolygon(p.x, p.y, drag.item.w, drag.item.h, GRID_ORIGIN))
+                preview.style.display = "block"
+            } else {
+                preview.style.display = "none"
+            }
+        }
+
+        svg.onpointerup = e => {
+            if (!drag) return
+
+            const r = svg.getBoundingClientRect()
+            const mx = e.clientX - r.left
+            const my = e.clientY - r.top
+
+            if (isInsideGrid(mx, my)) {
+                const iso = screenToIso(mx, my, GRID_ORIGIN)
+                const p = snapToGrid(iso, drag.item)
+                placedItems.push({ ...drag.item, x: p.x, y: p.y })
+            }
+
+            ghost.remove()
+            preview.remove()
+            drag = null
+
+            redrawPlaced()
+        }
+
+
+        /* ============================================================
+           SECTION 8 — DRAW PLACED OBJECTS
+           ============================================================ */
+
+        function redrawPlaced() {
+            document.querySelectorAll(".placed").forEach(e => e.remove())
+
+            for (const it of placedItems) {
+                const p = makePolygon("item placed", it.color)
+                p.setAttribute("points", buildPolygon(it.x, it.y, it.w, it.h, GRID_ORIGIN))
+            }
+        }
+    </script>
+
+</body>
+
+</html>
